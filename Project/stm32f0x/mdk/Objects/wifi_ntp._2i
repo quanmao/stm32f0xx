@@ -1,0 +1,6 @@
+--cpp -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\..\mcu\stm32f0x\Libraries\CMSIS\Include -I ..\..\..\mcu\stm32f0x\Libraries\STM32F0xx_HAL_Driver\Inc -I ..\..\..\mcu\stm32f0x\Libraries\CMSIS\Device\ST\STM32F0xx\Include -I ..\..\..\mcu\stm32f0x\ebox -I ..\..\..\mcu\stm32f0x\ebox\core -I ..\..\..\mcu\stm32f0x\ebox\Peripherals -I ..\..\..\common\util -I ..\..\..\common\edriver -I ..\..\..\common\network -I ..\..\..\common\fat -I ..\..\..\user -I ..\..\..\common\util\printf -I ..\..\..\mcu\stm32f0x\ebox\mcu -I ..\..\..\common\edriver\F0 -I ..\..\..\..\my-lib\drive\ebox -I ..\..\..\common\edriver\F0\WiFi
+-I"E:\My program\MCU\GitHub\power meter\Project\stm32f0x\mdk\RTE"
+-ID:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include
+-ID:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="521" -DSTM32F030x6 -DSTM32F030x6 -DUSE_FULL_LL_DRIVER
+-o .\objects\wifi_ntp.o --omf_browse .\objects\wifi_ntp.crf --depend .\objects\wifi_ntp.d --feedback ".\Objects\ebox.fed" "..\..\..\User\wifi_ntp.cpp"

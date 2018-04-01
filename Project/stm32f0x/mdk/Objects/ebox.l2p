@@ -1,0 +1,27 @@
+--cpu Cortex-M0
+".\objects\system_stm32f0xx.o"
+".\objects\startup_stm32f030x6.o"
+".\objects\stm32f0xx_ll_utils.o"
+".\objects\stm32f0xx_ll_rcc.o"
+".\objects\stm32f0xx_ll_i2c.o"
+".\objects\stm32f0xx_ll_rtc.o"
+".\objects\ebox_gpio.o"
+".\objects\ebox_uart.o"
+".\objects\ebox_core.o"
+".\objects\ebox_i2c.o"
+".\objects\ebox_rtc.o"
+".\objects\main.o"
+".\objects\ebox_it.o"
+".\objects\wifi_ntp.o"
+".\objects\rtc.o"
+".\objects\printf.o"
+".\objects\ringbuf.o"
+".\objects\ina219.o"
+".\objects\liquidcrystal_i2c.o"
+".\objects\dht11.o"
+".\objects\esp8266.o"
+".\objects\esp8266_udp.o"
+--library_type=microlib --strict --scatter ".\Objects\ebox.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\ebox.map" -o .\Objects\ebox.axf

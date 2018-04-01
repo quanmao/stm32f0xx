@@ -1,0 +1,238 @@
+;#<FEEDBACK># ARM Linker, 5060300: Last Updated: Tue Nov 07 20:04:54 2017
+;VERSION 0.2
+;FILE dht11.o
+__asm___9_dht11_cpp_2e1e4a9d___Z7__REV16j <= USED 0
+__asm___9_dht11_cpp_2e1e4a9d___Z7__REVSHi <= USED 0
+;FILE ebox_core.o
+SystickCallBackRegister1 <= USED 0
+_ZN4eBox4stopEv <= USED 0
+_ZN4eBox5sleepEv <= USED 0
+_ZN4eBox7standbyEv <= USED 0
+__asm___13_ebox_core_cpp_irqCount___Z7__REV16j <= USED 0
+__asm___13_ebox_core_cpp_irqCount___Z7__REVSHi <= USED 0
+;FILE ebox_gpio.o
+_ZN5E_BUS4modeE9E_PinMode <= USED 0
+_ZN5E_BUS4readEv <= USED 0
+_ZN5E_BUS5writeEt <= USED 0
+_ZN5E_BUS6setAllEv <= USED 0
+_ZN5E_BUS8resetAllEv <= USED 0
+_ZN5E_BUSC1E7E_PinIDS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_S0_S0_S0_S0_S0_ <= USED 0
+_ZN5E_BUSC1EP7E_PinID <= USED 0
+_ZN5E_BUSaSEt <= USED 0
+_ZN5E_BUScvtEv <= USED 0
+_ZN5E_BUSixEt <= USED 0
+_ZN6E_GPIO5writeEh <= USED 0
+_ZN6E_GPIO6toggleEv <= USED 0
+_ZN6E_GPIOaSERS_ <= USED 0
+_ZN6E_GPIOaSEh <= USED 0
+_ZN6E_GPIOcviEv <= USED 0
+_ZN6E_PORT4modeE9E_PinMode <= USED 0
+_ZN6E_PORT4readEv <= USED 0
+_ZN6E_PORT5writeEt <= USED 0
+_ZN6E_PORT6setAllEv <= USED 0
+_ZN6E_PORT8resetAllEv <= USED 0
+_ZN6E_PORT9init_portEh <= USED 0
+_ZN6E_PORTC1E6E_Porthh <= USED 0
+_ZN6E_PORTC1E6E_Portj <= USED 0
+_ZN6E_PORTaSEt <= USED 0
+_ZN6E_PORTcvtEv <= USED 0
+__asm___13_ebox_gpio_cpp_9b76395f___Z7__REV16j <= USED 0
+__asm___13_ebox_gpio_cpp_9b76395f___Z7__REVSHi <= USED 0
+;FILE ebox_i2c.o
+_ZN5E_I2C11read_configEv <= USED 0
+_ZN5E_I2C12releaseRightEv <= USED 0
+_ZN5E_I2C4readEh <= USED 0
+_ZN5E_I2C4readEhh <= USED 0
+_ZN5E_I2C7readBufEhhPhtt <= USED 0
+_ZN5E_I2C7waitAckEht <= USED 0
+_ZN5E_I2C8writeBufEhhPhtt <= USED 0
+_ZN5E_I2C9takeRightEjt <= USED 0
+__asm___12_ebox_i2c_cpp_b1f61c84___Z7__REV16j <= USED 0
+__asm___12_ebox_i2c_cpp_b1f61c84___Z7__REVSHi <= USED 0
+;FILE ebox_it.o
+_Z14RTC_IRQHandlerv <= USED 0
+__asm___11_ebox_it_cpp_ed527af6___Z7__REV16j <= USED 0
+__asm___11_ebox_it_cpp_ed527af6___Z7__REVSHi <= USED 0
+;FILE ebox_rtc.o
+_ZN5E_RTC11getDateTimeEP11date_time_t <= USED 0
+_ZN5E_RTC12alarm_ON_OFFE15FunctionalState <= USED 0
+_ZN5E_RTC15set_config_flagEv <= USED 0
+_ZN5E_RTC7getDateEP6Date_T <= USED 0
+_ZN5E_RTC9is_configEv <= USED 0
+__asm___12_ebox_rtc_cpp_52a5b802___Z7__REV16j <= USED 0
+__asm___12_ebox_rtc_cpp_52a5b802___Z7__REVSHi <= USED 0
+;FILE ebox_uart.o
+_Z5beginjhhfh <= USED 0
+_ZN6E_UART11disable_irqE7IrqType <= USED 0
+__asm___13_ebox_uart_cpp_6bafa921___Z7__REV16j <= USED 0
+__asm___13_ebox_uart_cpp_6bafa921___Z7__REVSHi <= USED 0
+;FILE esp8266.o
+_ZN7ESP826610create_TCPEPcjj <= USED 0
+_ZN7ESP826610create_TCPEhPcjj <= USED 0
+_ZN7ESP826610enable_MUXEv <= USED 0
+_ZN7ESP826610exc_AT_ATEEPKc <= USED 0
+_ZN7ESP826610exc_AT_GMREPc <= USED 0
+_ZN7ESP826610get_APListEPc <= USED 0
+_ZN7ESP826611disable_MUXEv <= USED 0
+_ZN7ESP826611exc_AT_GSLPEh <= USED 0
+_ZN7ESP826611exc_AT_PINGEPKcPc <= USED 0
+_ZN7ESP826611exc_AT_UARTEjhhhh <= USED 0
+_ZN7ESP826611get_versionEPc <= USED 0
+_ZN7ESP826611release_TCPEh <= USED 0
+_ZN7ESP826611release_TCPEv <= USED 0
+_ZN7ESP826611stop_ServerEv <= USED 0
+_ZN7ESP826612exc_AT_CIFSREPc <= USED 0
+_ZN7ESP826612exc_AT_CWLAPEPc <= USED 0
+_ZN7ESP826612exc_AT_CWLIFEPc <= USED 0
+_ZN7ESP826612exc_AT_CWQAPEv <= USED 0
+_ZN7ESP826612get_local_IPEPc <= USED 0
+_ZN7ESP826612print_rx_bufEv <= USED 0
+_ZN7ESP826612query_sta_ipEPc <= USED 0
+_ZN7ESP826612register_UDPEhPcjj <= USED 0
+_ZN7ESP826612set_AT_CIPAPEPc <= USED 0
+_ZN7ESP826612set_AT_CWSAPEPcS0_hh <= USED 0
+_ZN7ESP826612start_ServerEj <= USED 0
+_ZN7ESP826613get_IP_statusEv <= USED 0
+_ZN7ESP826613set_AT_CIPMUXEh <= USED 0
+_ZN7ESP826613set_AT_CIPSTAEPc <= USED 0
+_ZN7ESP826613set_AT_CIPSTOEj <= USED 0
+_ZN7ESP826613set_AT_CWDHCPEhh <= USED 0
+_ZN7ESP826614exc_AT_RESTOREEv <= USED 0
+_ZN7ESP826614query_AT_CIPAPEPc <= USED 0
+_ZN7ESP826614set_AT_CIPMODEEh <= USED 0
+_ZN7ESP826614stop_TCPServerEv <= USED 0
+_ZN7ESP826614unregister_UDPEh <= USED 0
+_ZN7ESP826614unregister_UDPEv <= USED 0
+_ZN7ESP826615exc_AT_CIUPDATEEv <= USED 0
+_ZN7ESP826615query_AT_CIPSTAEPc <= USED 0
+_ZN7ESP826615set_AT_CIPAPMACEPc <= USED 0
+_ZN7ESP826615start_TCPServerEj <= USED 0
+_ZN7ESP826616exc_AT_CIPSTATUSEPc <= USED 0
+_ZN7ESP826616set_AT_CIPSERVEREhj <= USED 0
+_ZN7ESP826616set_AT_CIPSTAMACEPc <= USED 0
+_ZN7ESP826616set_SoftAP_paramEPcS0_hh <= USED 0
+_ZN7ESP826617query_AT_CIPAPMACEPc <= USED 0
+_ZN7ESP826617query_sta_gatewayEPc <= USED 0
+_ZN7ESP826617query_sta_netmaskEPc <= USED 0
+_ZN7ESP826617set_AT_CWAUTOCONNEh <= USED 0
+_ZN7ESP826617set_AT_exit_transEv <= USED 0
+_ZN7ESP826617set_opr_to_softAPEv <= USED 0
+_ZN7ESP826618query_AT_CIPSTAMACEPc <= USED 0
+_ZN7ESP826618set_AT_CWSMARTSTOPEv <= USED 0
+_ZN7ESP826619get_joined_DeviceIPEPc <= USED 0
+_ZN7ESP826619set_AT_CWSMARTSTARTEh <= USED 0
+_ZN7ESP826621set_TCPServer_timeoutEj <= USED 0
+_ZN7ESP826622exc_AT_CIPCLOSE_singleEv <= USED 0
+_ZN7ESP826623set_AT_CIPSEND_multipleEhPKhj <= USED 0
+_ZN7ESP826624set_AT_CIPCLOSE_mulitpleEh <= USED 0
+_ZN7ESP826624set_AT_CIPSTART_multipleEhPcS0_jj <= USED 0
+_ZN7ESP826624set_opr_to_stationSoftAPEv <= USED 0
+_ZN7ESP82664readEPhS0_ <= USED 0
+_ZN7ESP82664sendEhPKhj <= USED 0
+_ZN7ESP82667get_strEPcPKcttS0_ <= USED 0
+_ZN7ESP82667get_strEPcS0_t <= USED 0
+_ZN7ESP82667join_apEv <= USED 0
+_ZN7ESP82668leave_APEv <= USED 0
+_ZN7ESP82668read_oneEv <= USED 0
+_ZN7ESP82669print_cmdER11CMD_STATE_T <= USED 0
+__asm___11_ESP8266_cpp_ssid___Z7__REV16j <= USED 0
+__asm___11_ESP8266_cpp_ssid___Z7__REVSHi <= USED 0
+;FILE esp8266_udp.o
+_ZN8WIFI_UDP12read_onebyteEv <= USED 0
+_ZN8WIFI_UDP4readEPhS0_ <= USED 0
+_ZN8WIFI_UDP4sendEhPht <= USED 0
+_ZN8WIFI_UDP5beginEv <= USED 0
+_ZN8WIFI_UDP7connectEhPcjj <= USED 0
+__asm___15_esp8266_udp_cpp_56e84d08___Z7__REV16j <= USED 0
+__asm___15_esp8266_udp_cpp_56e84d08___Z7__REVSHi <= USED 0
+;FILE ina219.o
+_ZN6INA21918getShuntVoltage_uVEv <= USED 0
+_ZN6INA21919getShuntVoltage_rawEv <= USED 0
+_ZN6INA2195resetEv <= USED 0
+_ZN6INA2196configEttttt <= USED 0
+__asm___10_INA219_cpp_098d1456___Z7__REV16j <= USED 0
+__asm___10_INA219_cpp_098d1456___Z7__REVSHi <= USED 0
+;FILE liquidcrystal_i2c.o
+_ZN17LiquidCrystal_I2C10autoscrollEv <= USED 0
+_ZN17LiquidCrystal_I2C10createCharEhPh <= USED 0
+_ZN17LiquidCrystal_I2C10cursor_offEv <= USED 0
+_ZN17LiquidCrystal_I2C11leftToRightEv <= USED 0
+_ZN17LiquidCrystal_I2C11noBacklightEv <= USED 0
+_ZN17LiquidCrystal_I2C11rightToLeftEv <= USED 0
+_ZN17LiquidCrystal_I2C11setContrastEh <= USED 0
+_ZN17LiquidCrystal_I2C12noAutoscrollEv <= USED 0
+_ZN17LiquidCrystal_I2C12setBacklightEh <= USED 0
+_ZN17LiquidCrystal_I2C13init_bargraphEh <= USED 0
+_ZN17LiquidCrystal_I2C17scrollDisplayLeftEv <= USED 0
+_ZN17LiquidCrystal_I2C18scrollDisplayRightEv <= USED 0
+_ZN17LiquidCrystal_I2C19draw_vertical_graphEhhhh <= USED 0
+_ZN17LiquidCrystal_I2C21draw_horizontal_graphEhhhh <= USED 0
+_ZN17LiquidCrystal_I2C21load_custom_characterEhPh <= USED 0
+_ZN17LiquidCrystal_I2C2onEv <= USED 0
+_ZN17LiquidCrystal_I2C3offEv <= USED 0
+_ZN17LiquidCrystal_I2C5blinkEv <= USED 0
+_ZN17LiquidCrystal_I2C6cursorEv <= USED 0
+_ZN17LiquidCrystal_I2C6keypadEv <= USED 0
+_ZN17LiquidCrystal_I2C6statusEv <= USED 0
+_ZN17LiquidCrystal_I2C7noBlinkEv <= USED 0
+_ZN17LiquidCrystal_I2C8blink_onEv <= USED 0
+_ZN17LiquidCrystal_I2C8noCursorEv <= USED 0
+_ZN17LiquidCrystal_I2C8printstrEPKc <= USED 0
+_ZN17LiquidCrystal_I2C8setDelayEii <= USED 0
+_ZN17LiquidCrystal_I2C9blink_offEv <= USED 0
+_ZN17LiquidCrystal_I2C9cursor_onEv <= USED 0
+_ZN17LiquidCrystal_I2C9noDisplayEv <= USED 0
+_ZN17LiquidCrystal_I2CC1Ehhh <= USED 0
+__asm___21_LiquidCrystal_I2C_cpp_e9344011___Z7__REV16j <= USED 0
+__asm___21_LiquidCrystal_I2C_cpp_e9344011___Z7__REVSHi <= USED 0
+;FILE main.o
+__asm___8_main_cpp_ic___Z7__REV16j <= USED 0
+__asm___8_main_cpp_ic___Z7__REVSHi <= USED 0
+;FILE printf.o
+;FILE ringbuf.o
+_ZN7RINGBUF5clearEv <= USED 0
+;FILE rtc.o
+_Z4initv <= USED 0
+__asm___7_rtc_cpp_rtc___Z7__REV16j <= USED 0
+__asm___7_rtc_cpp_rtc___Z7__REVSHi <= USED 0
+;FILE startup_stm32f030x6.o
+;FILE stm32f0xx_ll_i2c.o
+LL_I2C_DeInit <= USED 0
+LL_I2C_Init <= USED 0
+LL_I2C_StructInit <= USED 0
+__asm___18_stm32f0xx_ll_i2c_c_6492013e____REV16 <= USED 0
+__asm___18_stm32f0xx_ll_i2c_c_6492013e____REVSH <= USED 0
+;FILE stm32f0xx_ll_rcc.o
+LL_RCC_DeInit <= USED 0
+LL_RCC_GetI2CClockFreq <= USED 0
+LL_RCC_GetUSARTClockFreq <= USED 0
+__asm___18_stm32f0xx_ll_rcc_c_5c04acb7____REV16 <= USED 0
+__asm___18_stm32f0xx_ll_rcc_c_5c04acb7____REVSH <= USED 0
+;FILE stm32f0xx_ll_rtc.o
+LL_RTC_ALMA_Init <= USED 0
+LL_RTC_ALMA_StructInit <= USED 0
+LL_RTC_DATE_Init <= USED 0
+LL_RTC_DATE_StructInit <= USED 0
+LL_RTC_DeInit <= USED 0
+LL_RTC_EnterInitMode <= USED 0
+LL_RTC_ExitInitMode <= USED 0
+LL_RTC_Init <= USED 0
+LL_RTC_StructInit <= USED 0
+LL_RTC_TIME_Init <= USED 0
+LL_RTC_TIME_StructInit <= USED 0
+LL_RTC_WaitForSynchro <= USED 0
+__asm___18_stm32f0xx_ll_rtc_c_94a5830f____REV16 <= USED 0
+__asm___18_stm32f0xx_ll_rtc_c_94a5830f____REVSH <= USED 0
+;FILE stm32f0xx_ll_utils.o
+LL_Init1msTick <= USED 0
+LL_PLL_ConfigSystemClock_HSE <= USED 0
+LL_SetSystemCoreClock <= USED 0
+LL_mDelay <= USED 0
+__asm___20_stm32f0xx_ll_utils_c_fa0b8999____REV16 <= USED 0
+__asm___20_stm32f0xx_ll_utils_c_fa0b8999____REVSH <= USED 0
+;FILE system_stm32f0xx.o
+__asm___18_system_stm32f0xx_c_5d646a67____REV16 <= USED 0
+__asm___18_system_stm32f0xx_c_5d646a67____REVSH <= USED 0
+;FILE wifi_ntp.o
+__asm___12_wifi_ntp_cpp_usart2___Z7__REV16j <= USED 0
+__asm___12_wifi_ntp_cpp_usart2___Z7__REVSHi <= USED 0
