@@ -16,7 +16,20 @@
   ******************************************************************************
   */
 #include "ebox_iflash.h"
+
+
+#if USE_PRINTF
+// 是否打印调试信息, 1打印,0不打印
+#define debug 1
+#endif
+
+#if debug
 #include "ebox_debug.h"
+#define  IFLASH_DEBUG(...) DBG("[IFLASH]  "),DBG(__VA_ARGS__)
+#else
+#define  IFLASH_DEBUG(...)
+#endif
+
 
 typedef enum
 {
@@ -137,7 +150,26 @@ E_FlashStates ebox_FLASH_PageErase(uint32_t PageAddress)
 		FLASH->CR &= ~FLASH_CR_PER;
 	}
 	ebox_FLASH_Lock();
-	DBG("PageErase state = %d \r\n",state);
+#if debug
+	IFLASH_DEBUG("PageErase state : ");
+	switch(state){
+		case 1:
+			DBG("BUSY \r\n");
+			break;
+		case 2:
+			DBG("ERROR_WRP \r\n");
+			break;
+		case 3:
+			DBG("ERROR_PROGRAM \r\n");
+			break;
+		case 4:
+		  DBG("COMPLETE \r\n");
+			break;
+		case 5:
+			DBG("TIMEOUT \r\n");
+			break;
+	}
+#endif
 	return state;
 }
 
@@ -234,7 +266,7 @@ int E_Flash::write(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToWrite)
 	static uint8_t tmp[FLASH_PAGE_S];
 
 	if ((_start_addr == 0)||(iAddress == _end_addr)){
-		DBG("write: flash 定义错误，请检查起始地址和页数量\r\n");
+		IFLASH_DEBUG("write: flash 定义错误，请检查起始地址和页数量\r\n");
 		return 0;
 	}
 
@@ -274,7 +306,7 @@ int E_Flash::write(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToWrite)
 		{
 			secpos += FLASH_PAGE_SIZE;
 			if (secpos >= _end_addr){
-				DBG("write: 空间不足，请检查flash大小！\r\n");
+				IFLASH_DEBUG("write: 空间不足，请检查flash大小！\r\n");
 				return -1;
 			}
 			secoff = 0;//偏移位置为0
@@ -300,7 +332,7 @@ int E_Flash::write(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToWrite)
 	uint16_t secremain;
 
 	if ((_start_addr == 0)||(iAddress == _end_addr)){
-		DBG("write: flash 定义错误，请检查起始地址和页数量\r\n");
+		IFLASH_DEBUG("write: flash 定义错误，请检查起始地址和页数量\r\n");
 		return 0;
 	}
 
@@ -322,7 +354,7 @@ int E_Flash::write(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToWrite)
 		{
 			secpos += FLASH_PAGE_SIZE;
 			if (secpos >= _end_addr){
-				DBG("write: 空间不足，请检查flash大小！\r\n");
+				IFLASH_DEBUG("write: 空间不足，请检查flash大小！\r\n");
 				return -1;
 			}
 			secoff = 0;//偏移位置为0
@@ -353,7 +385,7 @@ int E_Flash::read(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToRead)
 	uint32_t iAddress = _start_addr + offsetAdd;
 
 	if (_start_addr == 0){
-		DBG("read: flash 定义错误，请检查起始地址和页数量\r\n");
+		IFLASH_DEBUG("read: flash 定义错误，请检查起始地址和页数量\r\n");
 		return 0;
 	}
 
