@@ -1,0 +1,12 @@
+/Project/stm32f0x/mdk/Objects/*.d
+/Project/stm32f0x/mdk/Listings/*.map
+/Project/stm32f0x/mdk/Listings/*.lst
+/Project/stm32f0x/mdk/Objects/*.crf
+/Project/stm32f0x/mdk/Objects/*.o
+/Project/stm32f0x/mdk/Objects/*.axf
+/Project/stm32f0x/mdk/Objects/*.htm
+/Project/stm32f0x/mdk/Objects/*.lnp
+/Project/stm32f0x/mdk/Objects/*.sct
+/Project/stm32f0x/mdk/Objects/*.dep
+/Project/stm32f0x/TKStudio/*.tuo
+/Project/stm32f0x/TKStudio/*.xmp
