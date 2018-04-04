@@ -10,3 +10,5 @@
 /Project/stm32f0x/mdk/Objects/*.dep
 /Project/stm32f0x/TKStudio/*.tuo
 /Project/stm32f0x/TKStudio/*.xmp
+
+/Project/stm32f0x/mdk/stm32f0x.uvguix.quli
