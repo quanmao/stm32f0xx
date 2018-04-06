@@ -198,7 +198,7 @@ E_STATE	E_UART::read(uint16_t *dat, uint16_t timeOut_ms){
 		uint32_t end = GetEndTime(timeOut_ms);
 		while(LL_USART_IsActiveFlag_RXNE(UARTx) == RESET)
 		{
-			if(!IsTimeOut(end))
+			if(!IsTimeOut(end,timeOut_ms))
 			{
 					return E_TIMEOUT;
 			}

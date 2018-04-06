@@ -126,7 +126,7 @@ uint32_t E_I2C::read_config()
 E_STATE E_I2C::write(uint8_t slave_address,uint8_t data,uint16_t timeout_us)
 {
 #if	(TIMEOUT != 0)
-	uint64_t end = GetEndTime(timeout_us);
+	uint32_t end = GetEndTime(timeout_us);
 #endif
 	LL_I2C_HandleTransfer(_i2cx,slave_address,LL_I2C_ADDRESSING_MODE_7BIT,1,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE);
 	
@@ -137,7 +137,7 @@ E_STATE E_I2C::write(uint8_t slave_address,uint8_t data,uint16_t timeout_us)
 			LL_I2C_TransmitData8(_i2cx,data);
 		}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 	}
 	LL_I2C_ClearFlag_STOP(_i2cx);
@@ -169,7 +169,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t *data, uint16_t num_to_wr
 				LL_I2C_TransmitData8(_i2cx,*data++);
 			}
 #if	(TIMEOUT != 0)
-			if (IsTimeOut(end))	return E_TIMEOUT;
+			if (IsTimeOut(end,timeout_us))	return E_TIMEOUT;
 #endif
 		}
 		num_to_write = num_to_write - 255;
@@ -188,7 +188,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t *data, uint16_t num_to_wr
 					LL_I2C_TransmitData8(_i2cx,*data++);
 				}
 #if	(TIMEOUT != 0)
-				if (IsTimeOut(end))	return E_TIMEOUT;
+				if (IsTimeOut(end,timeout_us))	return E_TIMEOUT;
 #endif
 			}
 			num_to_write = num_to_write - 255;
@@ -205,7 +205,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t *data, uint16_t num_to_wr
 				LL_I2C_TransmitData8(_i2cx,*data++);
 			}
 #if	(TIMEOUT != 0)
-			if (IsTimeOut(end))	return E_TIMEOUT;
+			if (IsTimeOut(end,timeout_us))	return E_TIMEOUT;
 #endif
 		}
 		LL_I2C_ClearFlag_STOP(_i2cx);
@@ -222,7 +222,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t *data, uint16_t num_to_wr
 				LL_I2C_TransmitData8(_i2cx,*data++);
 			}
 #if	(TIMEOUT != 0)
-			if (IsTimeOut(end))	return E_TIMEOUT;
+			if (IsTimeOut(end,timeout_us))	return E_TIMEOUT;
 #endif
 		}
 		LL_I2C_ClearFlag_STOP(_i2cx);
@@ -255,7 +255,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *dat
 			LL_I2C_TransmitData8(_i2cx,reg_address);
 		}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 	}
 	// 发送数据
@@ -274,7 +274,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *dat
 					LL_I2C_TransmitData8(_i2cx,*data++);
 				}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 			}
 			num_to_write = num_to_write - 255;
@@ -291,7 +291,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *dat
 				LL_I2C_TransmitData8(_i2cx,*data++);
 			}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 		}
 		LL_I2C_ClearFlag_STOP(_i2cx);
@@ -308,7 +308,7 @@ E_STATE E_I2C::writeBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *dat
 				LL_I2C_TransmitData8(_i2cx,*data++);
 			}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 		}
 		LL_I2C_ClearFlag_STOP(_i2cx);
@@ -338,7 +338,7 @@ E_STATE E_I2C::readBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *data
 		{
 			LL_I2C_TransmitData8(_i2cx,reg_address);
 		}
-		if (IsTimeOut(end))
+		if (IsTimeOut(end,timeout_us))
 		{
 			return E_TIMEOUT;
 		}
@@ -355,7 +355,7 @@ E_STATE E_I2C::readBuf(uint8_t slave_address, uint8_t reg_address, uint8_t *data
 			*data++ = LL_I2C_ReceiveData8(_i2cx);
 		}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 	}
 	LL_I2C_ClearFlag_STOP(_i2cx);
@@ -383,7 +383,7 @@ E_STATE E_I2C::readBuf(uint8_t slave_address,uint8_t *data, uint16_t num_to_read
 			*data++ = LL_I2C_ReceiveData8(_i2cx);
 		}
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_TIMEOUT;
+		if (IsTimeOut(end,timeout_us)) return E_TIMEOUT;
 #endif
 	}
 	LL_I2C_ClearFlag_STOP(_i2cx);
@@ -428,7 +428,7 @@ E_STATE E_I2C::waitAck(uint8_t s_addr,uint16_t timeout_us){
 
 		LL_I2C_HandleTransfer(_i2cx,s_addr,LL_I2C_ADDRESSING_MODE_7BIT,0,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE);
 		delay_us(100);
-		if (IsTimeOut(end))
+		if (IsTimeOut(end,timeout_us))
 		{
 			return E_TIMEOUT;
 		}
@@ -453,7 +453,7 @@ E_STATE E_I2C::takeRight(uint32_t timing,uint16_t timeout_us)
 	{
 		delay_ms(1);
 #if	(TIMEOUT != 0)
-		if (IsTimeOut(end)) return E_BUSY;
+		if (IsTimeOut(end,timeout_us)) return E_BUSY;
 #endif
 	}
 	_timing = timing;

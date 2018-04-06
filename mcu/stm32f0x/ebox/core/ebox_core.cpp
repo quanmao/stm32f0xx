@@ -162,8 +162,8 @@ extern "C" {
   */
 	 void delay_ms(uint32_t ms)
   {
-    uint64_t end = GetEndTime(ms);
-    while (!IsTimeOut(end));
+    uint32_t end = GetEndTime(ms);
+    while (!IsTimeOut(end,ms));
   }
   /**
    *@brief    us延时,使用systick计数器。48Mhz时钟时可以满足us(1.3)精度。8Mhz时最小6-7us,24Mhz时最小2.2us,16Mhz时最小3.5us

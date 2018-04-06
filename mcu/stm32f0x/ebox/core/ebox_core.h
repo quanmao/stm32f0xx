@@ -47,8 +47,8 @@ typedef struct
 {
 //	uint32_t    ability;      //cpu calculate plus per second;
 //	cpu_clock_t	clock;
-	uint32_t    chip_id[3];   //芯片id
-	uint16_t    flash_size;   //flash大小
+	uint32_t    chip_id[3];     //芯片id
+	uint16_t    flash_size;     //flash大小
 }cpu_t;
 
 extern cpu_clock_t clock;

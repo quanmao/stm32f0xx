@@ -1,4 +1,4 @@
-﻿/**
+/**
   ******************************************************************************
   * @file    ebox_define.h
   * @author  cat_li
@@ -59,8 +59,8 @@ typedef void (*fun_onePara_t)(unsigned int);  //单参数函数指针
 #define	abs(x)									    ((x) > 0 ? (x) : -(x))
 
 #define GetEndTime(timeOut)					(millis_seconds + timeOut)
-// 超时,返回0 否则返回非0
-#define IsTimeOut(endTime)					(endTime <= millis())
+// 超时,返回1 否则返回0   这里采用millis()获取millis_seconds,可以防止因为关闭中断导致程序死在延时函数里
+#define IsTimeOut(endTime,delay)		((uint32_t)(endTime - millis())>delay)
 
 // 对指定bit进行操作
 #define SetBit(data,offset)					((date) |= 1U << (offset))

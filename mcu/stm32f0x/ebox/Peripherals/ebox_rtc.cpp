@@ -43,7 +43,7 @@ __INLINE uint32_t ebox_WaitForSynchro_RTC(void)
 	/* Wait the registers to be synchronised */
 	while (LL_RTC_IsActiveFlag_RS(RTC) != 1)
 	{
-		if (IsTimeOut(end))
+		if (IsTimeOut(end,5000))
 		{
 			DBG("时钟同步超时\r\n");
 			return 0;
@@ -65,7 +65,7 @@ uint32_t ebox_Enter_RTC_InitMode(void)
 	/* Check if the Initialization mode is set */
 	while (LL_RTC_IsActiveFlag_INIT(RTC) != 1)
 	{
-		if (IsTimeOut(end))
+		if (IsTimeOut(end,RTC_TIMEOUT))
 		{
 			DBG("进入赋值模式超时\r\n");
 			return 0;
@@ -127,7 +127,7 @@ int E_RTC::begin(uint8_t clock_source)
 */
 int E_RTC::_config(ClockS clock)
 {
-	uint64_t end = GetEndTime(5000);
+	uint32_t end = GetEndTime(5000);
 	// 默认为内部LSI
 	uint32_t RTC_ASYNCH_PREDIV = LSI_ASYNCH_PREDIV;
 	uint32_t RTC_SYNCH_PREDIV = LSI_SYNCH_PREDIV;
@@ -156,7 +156,7 @@ int E_RTC::_config(ClockS clock)
 			LL_RCC_LSE_Enable();
 			while (LL_RCC_LSE_IsReady() != 1)
 			{
-				if (IsTimeOut(end))
+				if (IsTimeOut(end,5000))
 				{
 					DBG("LSE 未启动，检查外部晶振 \r\n");
 					return E_TIMEOUT;
@@ -174,7 +174,7 @@ int E_RTC::_config(ClockS clock)
 		LL_RCC_LSI_Enable();
 		while (LL_RCC_LSI_IsReady() != 1)
 		{
-			if (IsTimeOut(end))
+			if (IsTimeOut(end,5000))
 			{
 				return E_TIMEOUT;
 			}
