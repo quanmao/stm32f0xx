@@ -259,7 +259,7 @@ extern "C" {
       // 调用接收中断回调函数
       irq_handler(serial_irq_ids[Irq1],RxIrq);
       // 当前数据抛弃，准备下一次接收
-//				LL_USART_RequestRxDataFlush(USART1);
+//			LL_USART_RequestRxDataFlush(USART1);
       // 不判断是否发生溢出错误，默认清除溢出
       LL_USART_ClearFlag_ORE(USART1);
     }

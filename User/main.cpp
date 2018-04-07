@@ -26,6 +26,7 @@ E_GPIO STEP_PIN(PB_8);
 E_GPIO DIR_PIN(PB_9);
 
 
+
 void setup()
 {
 	ebox_init();
@@ -34,19 +35,33 @@ void setup()
 	
 	STEP_PIN.mode(OUTPUT_PP);
 	DIR_PIN.mode(OUTPUT_PP);
+	usart.printf("0x%x \r\n",get_resetType());
 }
 
+
+
+#define DELAY 25
+uint8_t i =250;
+E_WDG dog;
+#define GETEND(a) 	(a+i)
+#define ISOUT(end,delay)  ((uint8_t)(end-i)>delay)
 int main(void)
 {
+//		uint8_t i = 250;
+		uint8_t j = DELAY + i;
+
     setup();
+//		dog.begin(26208);
 		DIR_PIN.reset();
     while(1)
     {
-			
-			STEP_PIN.set();
-			delay_us(500);
-			STEP_PIN.reset();
-			delay_us(500);
+				delay_ms(10000);
+				usart.printf("×¼±¸¸´Î»");
+				ebox_rst();
+				for(;1;i++){
+//						usart.printf( "i = %d j = %d cha = %d  bool = %d bool = %d  \r\n",i,j,(uint8_t)(j-i),j>=i,ISOUT(j,DELAY));
+//						delay_ms(5000);
+				}
     }
 }
 
