@@ -84,8 +84,8 @@ typedef enum
 class E_RTC
 {
 public:
-	E_RTC(ClockS clock){_clocks = clock;};
-	int begin(uint8_t clock_source);//1:LSE;0:LSI如果使用外部晶振
+	E_RTC(ClockS clock){_clocks = clock;};  //1:LSE;0:LSI如果使用外部晶振
+	int begin(void);
 	//正常返回EOK
 	//失败后会返回一个ETIMEOUT错误,并自动转为内部晶振。
 
@@ -94,7 +94,7 @@ public:
 //	void attach_sec_interrupt(void (*cb_fun)(void));
 
 //	void overflow_interrupt(FunctionalState state);
-	void alarm_ON_OFF(FunctionalState state);
+	void alarmOnOff(FunctionalState state);
 //	void sec_interrupt(FunctionalState state);
 
 
@@ -105,15 +105,16 @@ public:
 	
 	void getDateTime(date_time_t *datetime);
 	void getTime(Time_T *time);
-	void getDate(Date_T *date);
+	void getDate(Date_T *date);  
 
 
 private:
 	ClockS	_clocks;
 	int    	_config(ClockS clock);
+  void    _setFormat(uint32_t formant);
 	uint8_t is_config(void);
 	void    set_config_flag(void);
-	void    nvic(FunctionalState state);
+	void    _nvic(void);
 };
 
 #endif

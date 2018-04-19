@@ -31,7 +31,7 @@
 #define EXAMPLE_DATE	"2017-07-18"
 #define DEMO_VER			"1.0"
 
-E_RTC rtc(clock_lsi);
+E_RTC rtc(clock_lse);
 //E_RTC rtc(clock_lse);
 // 串口，led
 E_UART usart(USART1,PA_9,PA_10);
@@ -93,7 +93,7 @@ void setup()
 
 	PrintfLogo();
 // EOK,初始化成功，并且RTC时间在运行，不需要设置日期，时间。否则需要设置
-	if (rtc.begin(1) != E_OK)
+	if (rtc.begin() != E_OK)
 	{
 		rtc.setDate(date);
 		rtc.setTime(time);
@@ -101,10 +101,11 @@ void setup()
 	// 设置闹铃
 	rtc.getTime(&time);
 	time.Minutes += 1;
-	time.Seconds += 15;
+	time.Seconds += 0;
 	rtc.setAlarm(time);
-	usart.printf("\n\r 闹铃时间设定为：%2d:%02d:%2d秒",time.Hours,time.Minutes,time.Seconds);
+	usart.printf("\n\r 闹铃时间设定为：%2d:%02d:%02d秒",time.Hours,time.Minutes,time.Seconds);
 	rtc.attach_alarm_interrupt(&exit);
+  rtc.alarmOnOff(ENABLE);
 }
 
 uint8_t Week[7][3] = {{"一"},{"二"},{"三"},{"四"},{"五"},{"六"},{"日"}};
@@ -118,7 +119,7 @@ int main(void)
 	{
 		// 每30s读取一次时间
 		rtc.getDateTime(&dtime);
-		usart.printf("\n\r %2d:%02d:%2d秒",dtime.hour,dtime.min,dtime.sec);
+		usart.printf("\n\r %2d:%02d:%02d秒",dtime.hour,dtime.min,dtime.sec);
 		usart.printf("\n\r 20%2d年%02d月%2d日 星期%02d",dtime.year,dtime.min,dtime.date,dtime.week);
 		delay_ms(30000);
 	}

@@ -19,8 +19,19 @@
 #include "stm32f0xx_ll_rtc.h"
 #include "stm32f0xx_ll_rcc.h"
 #include "stm32f0xx_ll_pwr.h"
-#include "ebox_debug.h"
 
+#if USE_PRINTF
+// 是否打印调试信息, 1打印,0不打印
+#define debug 1
+#endif
+
+#if debug
+#include "ebox_debug.h"
+#define  DEBUG(...) DBG("[RTC]  "),DBG(__VA_ARGS__)
+#else
+#define  DEBUG(...)
+#define	 DBG(...)
+#endif
 
 #define RTC_TIMEOUT	5000	// 5s
 /* Define used to indicate date/time updated */
@@ -45,7 +56,7 @@ __INLINE uint32_t ebox_WaitForSynchro_RTC(void)
 	{
 		if (IsTimeOut(end,5000))
 		{
-			DBG("时钟同步超时\r\n");
+			DEBUG("时钟同步超时\r\n");
 			return 0;
 		}
 	}
@@ -67,7 +78,7 @@ uint32_t ebox_Enter_RTC_InitMode(void)
 	{
 		if (IsTimeOut(end,RTC_TIMEOUT))
 		{
-			DBG("进入赋值模式超时\r\n");
+			DEBUG("进入赋值模式超时\r\n");
 			return 0;
 		}
 	}
@@ -91,7 +102,7 @@ uint32_t ebox_Exit_RTC_InitMode(void)
 
 
 
-int E_RTC::begin(uint8_t clock_source)
+int E_RTC::begin(void)
 {
 	int ret = E_NG;
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
@@ -103,110 +114,116 @@ int E_RTC::begin(uint8_t clock_source)
 				if (_config(clock_lse) != E_OK)
 				{
 					_config(clock_lsi);
-					DBG("LSE时钟启动失败,使用LSI时钟\r\n");
+					DEBUG("LSE时钟启动失败,使用LSI时钟\r\n");
 					//LL_RTC_BAK_SetRegister(RTC, LL_RTC_BKP_DR1, 0x00);
 					ret = E_NG;
 				}
 		}
 		else	// 时钟保持工作，不需要设置
 		{
-			DBG("使用LSE,无需配置时钟\r\n");
+			DEBUG("使用LSE,无需配置时钟,Alarm IT is %d \r\n",LL_RTC_IsEnabledIT_ALRA(RTC));      
 			ret = E_OK;
 		}
 	}else{	// 其他两种时钟源VDD掉电后RTC状态不定，所以需要初始化
 		_config(clock_lsi);
 	}
+	_nvic();
 	return ret;
 }
 
 /**
- *@name     setDate
- *@brief    设置日期
- *@param    Date_T date 日期
+ *@name     _config
+ *@brief    配置时钟，分频器，时间格式
+ *@param    ClockS clock 1 LSE,0 LSI
  *@retval   none
 */
 int E_RTC::_config(ClockS clock)
 {
-	uint32_t end = GetEndTime(5000);
-	// 默认为内部LSI
-	uint32_t RTC_ASYNCH_PREDIV = LSI_ASYNCH_PREDIV;
-	uint32_t RTC_SYNCH_PREDIV = LSI_SYNCH_PREDIV;
+  uint32_t end = GetEndTime(5000);
+  // 默认为内部LSI
+  uint32_t RTC_ASYNCH_PREDIV = LSI_ASYNCH_PREDIV;
+  uint32_t RTC_SYNCH_PREDIV = LSI_SYNCH_PREDIV;
 
-	/*##-1- Enables the PWR Clock and Enables access to the backup domain #######*/
-	/* To change the source clock of the RTC feature (LSE, LSI), you have to:
-	   - Enable the power clock
-	   - Enable write access to configure the RTC clock source (to be done once after reset).
-	   - Reset the Back up Domain
-	   - Configure the needed RTC clock source */
-	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-	// 允许访问备份域
-	LL_PWR_EnableBkUpAccess();
-	/*##-2- Configure LSE/LSI as RTC clock source ###############################*/
-	if (clock)		// 1 LSE
-	{
-					// 强制备份域重置
-			LL_RCC_ForceBackupDomainReset();
-			LL_RCC_ReleaseBackupDomainReset();
-					// 外部晶振LSE配置
-			RTC_ASYNCH_PREDIV = LSE_ASYNCH_PREDIV;
-			RTC_SYNCH_PREDIV = LSE_SYNCH_PREDIV;
-		if (LL_RCC_LSE_IsReady() == 0)
-		{
-			// 使能LSE
-			LL_RCC_LSE_Enable();
-			while (LL_RCC_LSE_IsReady() != 1)
-			{
-				if (IsTimeOut(end,5000))
-				{
-					DBG("LSE 未启动，检查外部晶振 \r\n");
-					return E_TIMEOUT;
-				}
-			}
+  /*##-1- Enables the PWR Clock and Enables access to the backup domain #######*/
+  /* To change the source clock of the RTC feature (LSE, LSI), you have to:
+     - Enable the power clock
+     - Enable write access to configure the RTC clock source (to be done once after reset).
+     - Reset the Back up Domain
+     - Configure the needed RTC clock source */
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+  // 允许访问备份域
+  LL_PWR_EnableBkUpAccess();
+  /*##-2- Configure LSE/LSI as RTC clock source ###############################*/
+  if (clock)		// 1 LSE
+  {
+    // 强制备份域重置
+    LL_RCC_ForceBackupDomainReset();
+    LL_RCC_ReleaseBackupDomainReset();
+    // 外部晶振LSE配置
+    RTC_ASYNCH_PREDIV = LSE_ASYNCH_PREDIV;
+    RTC_SYNCH_PREDIV = LSE_SYNCH_PREDIV;
+    if (LL_RCC_LSE_IsReady() == 0)
+    {
+      // 使能LSE
+      LL_RCC_LSE_Enable();
+      while (LL_RCC_LSE_IsReady() != 1)
+      {
+        if (IsTimeOut(end,5000))
+        {
+          DEBUG("LSE 未启动，检查外部晶振 \r\n");
+          return E_TIMEOUT;
+        }
+      }
 
-			// 选择LSE作为时钟源
-			LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
-			/* Enable RTC Clock */
-			LL_RCC_EnableRTC();
-			DBG("LSE 启动成功！\r\n");
-		}
-	}else{				// 0 LSI
-		/* Enable LSI */
-		LL_RCC_LSI_Enable();
-		while (LL_RCC_LSI_IsReady() != 1)
-		{
-			if (IsTimeOut(end,5000))
-			{
-				return E_TIMEOUT;
-			}
-		}
-		LL_RCC_ForceBackupDomainReset();
-		LL_RCC_ReleaseBackupDomainReset();
-		LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
-		/*##-3- Enable RTC peripheral Clocks #######################################*/
-		/* Enable RTC Clock */
-		LL_RCC_EnableRTC();
-		DBG("LSI 启动成功！\r\n");
-	}
+      // 选择LSE作为时钟源
+      LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
+      /* Enable RTC Clock */
+      LL_RCC_EnableRTC();
+      DEBUG("LSE 启动成功！Alarm IT is %d \r\n",LL_RTC_IsEnabledIT_ALRA(RTC));
+    }
+  }else{				// 0 LSI
+    /* Enable LSI */
+    LL_RCC_LSI_Enable();
+    while (LL_RCC_LSI_IsReady() != 1)
+    {
+      if (IsTimeOut(end,5000))
+      {
+        return E_TIMEOUT;
+      }
+    }
+    LL_RCC_ForceBackupDomainReset();
+    LL_RCC_ReleaseBackupDomainReset();
+    LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
+    /* Enable RTC Clock */
+    LL_RCC_EnableRTC();
+    DEBUG("LSI 启动成功！Alarm IT is %d \r\n",LL_RTC_IsEnabledIT_ALRA(RTC));
+  }
+  /*##-4- Disable RTC registers write protection ##############################*/
+  LL_RTC_DisableWriteProtection(RTC);
+  /*##-5- Enter in initialization mode #######################################*/
+  ebox_Enter_RTC_InitMode();
+  /*##-6- Configure RTC ######################################################*/
+  // 设置时间格式
+  LL_RTC_SetHourFormat(RTC, LL_RTC_HOURFORMAT_24HOUR);
+  /* Set Asynch Prediv (value according to source clock) 异步分频因子 */
+  LL_RTC_SetAsynchPrescaler(RTC, RTC_ASYNCH_PREDIV);
+  /* Set Synch Prediv (value according to source clock)  同不分频因子 */
+  LL_RTC_SetSynchPrescaler(RTC, RTC_SYNCH_PREDIV);
 
-	/*##-4- Disable RTC registers write protection ##############################*/
-	LL_RTC_DisableWriteProtection(RTC);
-	/*##-5- Enter in initialization mode #######################################*/
-	ebox_Enter_RTC_InitMode();
-	/*##-6- Configure RTC ######################################################*/
-	/* Configure RTC prescaler and RTC data registers */
-	// 设置时间格式
-	LL_RTC_SetHourFormat(RTC, LL_RTC_HOURFORMAT_24HOUR);
-	/* Set Asynch Prediv (value according to source clock) 异步分频因子 */
-	LL_RTC_SetAsynchPrescaler(RTC, RTC_ASYNCH_PREDIV);
-	/* Set Synch Prediv (value according to source clock)  同不分频因子 */
-	LL_RTC_SetSynchPrescaler(RTC, RTC_SYNCH_PREDIV);
+  /*##-7- Exit of initialization mode #######################################*/
+  ebox_Exit_RTC_InitMode();
+  /*##-8- Enable RTC registers write protection #############################*/
+  LL_RTC_EnableWriteProtection(RTC);
+  return E_OK;
+}
 
-	/*##-7- Exit of initialization mode #######################################*/
-	ebox_Exit_RTC_InitMode();
-	/*##-8- Enable RTC registers write protection #############################*/
-	LL_RTC_EnableWriteProtection(RTC);
-	nvic(ENABLE);
-	return E_OK;
+void E_RTC::_setFormat(uint32_t format){
+  LL_RTC_DisableWriteProtection(RTC);
+  ebox_Enter_RTC_InitMode();
+  // 设置时间格式
+  LL_RTC_SetHourFormat(RTC, format);
+  ebox_Exit_RTC_InitMode();
+  LL_RTC_EnableWriteProtection(RTC);
 }
 
 /**
@@ -299,14 +316,14 @@ void E_RTC::setAlarm(Time_T time,uint32_t mask)
 	/* Clear the Alarm interrupt pending bit */
 	LL_RTC_ClearFlag_ALRA(RTC);
 	/* Enable IT Alarm */
-	LL_RTC_EnableIT_ALRA(RTC);
+//	LL_RTC_EnableIT_ALRA(RTC);
 	ebox_Exit_RTC_InitMode();
 	/*##-8- Enable RTC registers write protection #############################*/
 	LL_RTC_EnableWriteProtection(RTC);
 }
 
 
-void E_RTC::nvic(FunctionalState state)
+void E_RTC::_nvic(void)
 {
 	/* RTC Alarm Interrupt Configuration: EXTI configuration */
 	LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_17);
@@ -334,7 +351,7 @@ void E_RTC::attach_alarm_interrupt(void (*cb_fun)(void))
 // 
 //}
 
-void E_RTC::alarm_ON_OFF(FunctionalState state)
+void E_RTC::alarmOnOff(FunctionalState state)
 {
 	LL_RTC_DisableWriteProtection(RTC);	
 	/* Clear the Alarm interrupt pending bit */
