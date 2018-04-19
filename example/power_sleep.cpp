@@ -71,46 +71,68 @@ void setup()
     usart.begin(115200);
 }
 
+
 void test()
 {
-		led.toggle();
-		usart.read();
+  static uint8_t i = 0;
+  led.toggle();
+  usart.read();   // 清空read中断
+	usart.write(0x30+i++);
+  if (i > 5){
+    ebox_exitSleepOnExti();
+    i = 0;
+  }
 }
 
 
-#include "stm32f0xx_ll_pwr.h"
+
 int main(void)
 {
-    setup();
-		PrintfLogo();
-		usart.printf("复位类型：0x%x ,PWR: %d \r\n",get_resetType(),LL_PWR_IsActiveFlag_SB());
-		/* Clear Standby flag */
-    LL_PWR_ClearFlag_SB(); 
-		delay_ms(5000);
-		
-		usart.attach(&test,RxIrq);
-		usart.enable_irq(RxIrq);
-		buttn.attach(&test,FALLING);
-		buttn.ENABLE(FALLING);	
-		usart.printf("sleep");
-		delay_us(1000);
-//		ebox_sleep();
-	
-		ebox_stop();
-//		led = 0;
-	
-//		ebox_standby();
-		ebox_init();
-		usart.printf("唤醒成功！\r\n");
-	  
-    while(1)
-    {
-				delay_ms(500);
-				led.toggle();
-//				delay_ms(10000);
-//				usart.printf("唤醒成功！\r\n");
-    }
+  setup();
+  PrintfLogo();
 
+  usart.printf("ebox_core.cpp中debug定义为：1，可以输出更多调试信息\r\n\r\n");
+  if (isWakeFromSB())
+  {
+    usart.printf("复位类型：0x%x ,standby模式唤醒,60s后进入主循环 \r\n",get_resetType());
+    /* Clear Standby flag */
+//    LL_PWR_ClearFlag_SB();
+    delay_ms(60000);
+  }else{
+    // 绑定中断,用来唤醒MCU
+    usart.attach(&test,RxIrq);
+    usart.enable_irq(RxIrq);
+
+    buttn.attach(&test,FALLING);
+    buttn.ENABLE(FALLING);
+
+    usart.printf("复位类型：0x%x ,30s后进入低功耗演示\r\n",get_resetType());
+
+    // sleep mode test
+    delay_ms(30000);
+    usart.printf("sleep now模式,usart,user键(任意中断)唤醒\r\n");
+    ebox_sleep(sleep_now);
+    usart.printf("已经唤醒，30后进入sleep_on_exti模式\r\n");
+    delay_ms(30000);
+    usart.printf("sleep_on_exti模式sart,user键(任意中断)唤醒,唤醒后执行完中断任务继续进入休眠，5次中断后唤醒\r\n");
+    ebox_sleep(sleep_on_exti);
+		// stop mode test
+    usart.printf("已经唤醒，30后进如stop模式\r\n");
+    delay_ms(30000);
+    usart.printf("stop模式，user(外部中断)键唤醒\r\n");
+    ebox_stop(sleep_now);
+
+		usart.printf("已经唤醒，30后进如standby模式\r\n");
+    delay_ms(30000);
+    usart.printf("standby模式，默认PA0唤醒\r\n");
+    ebox_standby();
+  }
+  usart.printf("即将进入主循环,led闪烁\r\n");
+  while (1)
+  {
+    delay_ms(500);
+    led.toggle();
+  }
 }
 
 

@@ -73,10 +73,36 @@ extern void get_chip_info(cpu_t *cpu);				//返回cpu信息,结果保存在cpu中
 // systick中断回调函数
 extern E_STATE SystickCallBackRegister(fun_noPara_t fun);                       // 绑定中断回调函数，使用默认周期 1ms
 extern E_STATE SystickCallBackMultipleReg(fun_noPara_t fun,uint16_t multiple); // 绑定中断回调函数，允许则定义周期 = multiple * 1ms; 最大65535
+
+
+#include "stm32f0xx_ll_pwr.h"
 // power manage
-extern void ebox_sleep(void);									//仅关闭CPU时钟，所有外设仍运行，可以通过任何中断唤醒
-extern void ebox_stop();
-extern void ebox_standby(void);								//wkup pin拉高,外部复位,rtc alarm,内部看门够可唤醒
+#define sleep_on_exti		0
+#define sleep_now				1
+#define	wfi							0
+#define wfe							1
+
+/* 仅关闭CPU时钟，所有外设仍运行，可以通过任何中断唤醒,IO保持休眠前状态 */
+extern void ebox_sleep(uint8_t isSleepnow = sleep_now,uint8_t entry = wfi);
+/* 1.8v域所有时钟关闭，SRAM和寄存器保存，可以通过任何外部中断/事件唤醒,
+特定外设(CEC,USART,I2C)中断(需编程为唤醒模式),IO保持休眠前状态 */
+extern void ebox_stop(uint8_t isSleepnow = sleep_now,uint8_t entry = wfi); 
+/* 如果ebox_sleep,ebox_stop设置为sleep_on_exti模式,在中断中调用该函数可以退出,返回主循环 */
+__STATIC_INLINE void ebox_exitSleepOnExti(){
+  CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+  CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPONEXIT_Msk));
+}
+
+/* wkup pin拉高,外部复位,rtc alarm,内部看门够可唤醒,默认PA0 */  
+extern void ebox_standby(uint32_t wakeUpPin = LL_PWR_WAKEUP_PIN1);
+/* 返回上次是否为standby模式，并清空标志位*/																			
+__STATIC_INLINE bool isWakeFromSB(){
+		LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+		bool r = (READ_BIT(PWR->CSR, PWR_CSR_SBF) == (PWR_CSR_SBF));
+		SET_BIT(PWR->CR, PWR_CR_CSBF);
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_PWR);
+		return r;
+}
 
 #define RST_LOWPOWER	0x80
 #define RST_WWDOG			0x40
@@ -98,14 +124,5 @@ __STATIC_INLINE void ebox_rst(){
 #ifdef __cplusplus
 }
 #endif
-// 以下部分还未优化
-class eBox{
-public:
-	eBox(int i){};
-	void sleep(void);
-	void stop(void);
-	void standby(void);
-};
-
 
 #endif
