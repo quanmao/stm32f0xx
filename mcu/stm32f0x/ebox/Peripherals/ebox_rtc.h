@@ -112,8 +112,8 @@ private:
 	ClockS	_clocks;
 	int    	_config(ClockS clock);
   void    _setFormat(uint32_t formant);
-	uint8_t is_config(void);
-	void    set_config_flag(void);
+	uint8_t _getTimeFlag(void);
+	void    _setTimeFlag(void);
 	void    _nvic(void);
 };
 

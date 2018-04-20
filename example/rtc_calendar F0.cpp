@@ -73,19 +73,19 @@ void exit()
 {
 	Time_T time;
 	usart.printf("\n\r\n\r");
-	usart.printf("***********************  ƒ÷¡Â  ******************************\n\r");
+	usart.printf("#######################  ƒ÷¡Â  ##############################\n\r");
 	rtc.getTime(&time);
-	usart.printf("***** %2d:%02d:%2d  ******",time.Hours,time.Minutes,time.Seconds);
+	usart.printf("#####                 %2d:%02d:%02d                       ######",time.Hours,time.Minutes,time.Seconds);
 	time.Minutes += 1;
 	rtc.setAlarm(time);
 	usart.printf("\r\n");
-	usart.printf("*************************************************************\n\r");
+	usart.printf("#############################################################\n\r");
 }
 
 void setup()
 {
 	Date_T date = {LL_RTC_WEEKDAY_WEDNESDAY, 13, LL_RTC_MONTH_SEPTEMBER, 16};
-	Time_T time = {LL_RTC_TIME_FORMAT_AM_OR_24, 12, 1, 1};
+	Time_T time = {LL_RTC_TIME_FORMAT_AM_OR_24, 22, 56, 1};
 
 	ebox_init();
 	get_chip_info(&cpu);

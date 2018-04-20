@@ -33,7 +33,7 @@
 #define	 DBG(...)
 #endif
 
-#define RTC_TIMEOUT	5000	// 5s
+#define RTC_TIMEOUT	10000	// 5s
 /* Define used to indicate date/time updated */
 #define RTC_BKP_DATE_TIME_UPDTATED ((uint32_t)0x32F2)
 
@@ -78,7 +78,7 @@ uint32_t ebox_Enter_RTC_InitMode(void)
 	{
 		if (IsTimeOut(end,RTC_TIMEOUT))
 		{
-			DEBUG("进入赋值模式超时\r\n");
+			DEBUG("进入赋值模式超时,如果使用LSE,请断电后重新上电！\r\n");
 			return 0;
 		}
 	}
@@ -109,7 +109,7 @@ int E_RTC::begin(void)
 	LL_PWR_EnableBkUpAccess();
 	if (_clocks)	//LSE
 	{
-		if ((is_config() == 0) )	//时钟掉电，需要重新设置
+		if ((_getTimeFlag() == 0) )	//时钟掉电，需要重新设置
 		{
 				if (_config(clock_lse) != E_OK)
 				{
@@ -144,14 +144,13 @@ int E_RTC::_config(ClockS clock)
   uint32_t RTC_ASYNCH_PREDIV = LSI_ASYNCH_PREDIV;
   uint32_t RTC_SYNCH_PREDIV = LSI_SYNCH_PREDIV;
 
-  /*##-1- Enables the PWR Clock and Enables access to the backup domain #######*/
   /* To change the source clock of the RTC feature (LSE, LSI), you have to:
      - Enable the power clock
      - Enable write access to configure the RTC clock source (to be done once after reset).
      - Reset the Back up Domain
      - Configure the needed RTC clock source */
+  /* 使能PWR电源&备份域访问*/
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-  // 允许访问备份域
   LL_PWR_EnableBkUpAccess();
   /*##-2- Configure LSE/LSI as RTC clock source ###############################*/
   if (clock)		// 1 LSE
@@ -174,7 +173,6 @@ int E_RTC::_config(ClockS clock)
           return E_TIMEOUT;
         }
       }
-
       // 选择LSE作为时钟源
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
       /* Enable RTC Clock */
@@ -198,21 +196,18 @@ int E_RTC::_config(ClockS clock)
     LL_RCC_EnableRTC();
     DEBUG("LSI 启动成功！Alarm IT is %d \r\n",LL_RTC_IsEnabledIT_ALRA(RTC));
   }
-  /*##-4- Disable RTC registers write protection ##############################*/
+  /* 关闭写保护并进入初始化模式 */
   LL_RTC_DisableWriteProtection(RTC);
-  /*##-5- Enter in initialization mode #######################################*/
   ebox_Enter_RTC_InitMode();
-  /*##-6- Configure RTC ######################################################*/
-  // 设置时间格式
+  
+  /* 设置时间格式&分频因子 */
   LL_RTC_SetHourFormat(RTC, LL_RTC_HOURFORMAT_24HOUR);
-  /* Set Asynch Prediv (value according to source clock) 异步分频因子 */
-  LL_RTC_SetAsynchPrescaler(RTC, RTC_ASYNCH_PREDIV);
-  /* Set Synch Prediv (value according to source clock)  同不分频因子 */
-  LL_RTC_SetSynchPrescaler(RTC, RTC_SYNCH_PREDIV);
 
-  /*##-7- Exit of initialization mode #######################################*/
+  LL_RTC_SetAsynchPrescaler(RTC, RTC_ASYNCH_PREDIV);    // 异步
+  LL_RTC_SetSynchPrescaler(RTC, RTC_SYNCH_PREDIV);      // 同步
+
+  /* 退出初始化模式并使能写保护 */
   ebox_Exit_RTC_InitMode();
-  /*##-8- Enable RTC registers write protection #############################*/
   LL_RTC_EnableWriteProtection(RTC);
   return E_OK;
 }
@@ -227,12 +222,11 @@ void E_RTC::_setFormat(uint32_t format){
 }
 
 /**
- *@name     is_config
  *@brief    检查时钟是否配置过
  *@param    none
  *@retval   0 不支持或未配置
 */
-uint8_t E_RTC::is_config(void)
+uint8_t E_RTC::_getTimeFlag(void)
 {
 #if defined(RTC_BACKUP_SUPPORT)
 	return (LL_RTC_BAK_GetRegister(RTC, LL_RTC_BKP_DR1) == RTC_BKP_DATE_TIME_UPDTATED);
@@ -242,12 +236,11 @@ uint8_t E_RTC::is_config(void)
 }
 
 /**
- *@name     set_config_flag
  *@brief    备份域写信息,用来识别时钟是否已经配置过
  *@param    none
  *@retval   none
 */
-void E_RTC::set_config_flag(void)
+void E_RTC::_setTimeFlag(void)
 {
 #if defined(RTC_BACKUP_SUPPORT)
 	/*##-8- Writes a data in a RTC Backup data Register1 #######################*/
@@ -256,21 +249,20 @@ void E_RTC::set_config_flag(void)
 }
 
 /**
- *@name     setDate
  *@brief    设置日期
  *@param    Date_T date 日期
  *@retval   none
 */
 void E_RTC::setDate(Date_T date)
 {
-	/*##-1- Disable RTC registers write protection ############################*/
+	/*##-1- 关闭写保护并进入初始化模式 */
 	LL_RTC_DisableWriteProtection(RTC);
 	ebox_Enter_RTC_InitMode();
-	/* Set Date: 2016年9月14*/
+	/* Set Date*/
 	LL_RTC_DATE_Config(RTC, __LL_RTC_CONVERT_BIN2BCD(date.WeekDay), __LL_RTC_CONVERT_BIN2BCD(date.Day), __LL_RTC_CONVERT_BIN2BCD(date.Month), __LL_RTC_CONVERT_BIN2BCD(date.Year));
-
-	ebox_Exit_RTC_InitMode();
-	/*##-8- Enable RTC registers write protection #############################*/
+	
+	/*##-3 退出初始化并打开写保护*/
+	ebox_Exit_RTC_InitMode();	
 	LL_RTC_EnableWriteProtection(RTC);
 }
 
@@ -282,15 +274,18 @@ void E_RTC::setDate(Date_T date)
 */
 void E_RTC::setTime(Time_T time)
 {
-	/*##-1- Disable RTC registers write protection ############################*/
+	/*##-1- 关闭写保护并进入初始化模式 */
 	LL_RTC_DisableWriteProtection(RTC);
 	ebox_Enter_RTC_InitMode();
-	/* Set Time: 24小时 00:00:00*/
+	
+	/* Set Time*/
 	LL_RTC_TIME_Config(RTC,__LL_RTC_CONVERT_BIN2BCD(time.Format12_24), __LL_RTC_CONVERT_BIN2BCD(time.Hours), __LL_RTC_CONVERT_BIN2BCD(time.Minutes), __LL_RTC_CONVERT_BIN2BCD(time.Seconds));
+	
+	/*##-3 退出初始化并打开写保护*/
 	ebox_Exit_RTC_InitMode();
-	/*##-8- Enable RTC registers write protection #############################*/
 	LL_RTC_EnableWriteProtection(RTC);
-	set_config_flag();
+	
+	_setTimeFlag();	
 }
 
 /**
