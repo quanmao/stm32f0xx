@@ -85,7 +85,11 @@ class E_RTC
 public:
 //	E_RTC(void);  //1:LSE;0:LSI如果使用外部晶振
 	
-  // 初始化RTC,默认LSE,如果LSE启动失败,会自动转为LSI
+	/**
+		* @brief  初始化RTC,默认LSE,如果LSE启动失败,会自动转为LSI
+		* @param  ClockS clock 时钟源，clock_lse,clock_lsi
+		* @retval E_TIMEOUT 时钟配置失败,E_OK 时钟配置成功,无需设置时钟，E_NG 时钟配置成功，需要设置时钟
+		*/
   int begin(ClockS clock = clock_lse);
   // 设置闹铃，默认不匹配日期
   void setAlarm(Time_T time,uint32_t mask = eRtc_MaskDateWeekDay);	

@@ -94,7 +94,7 @@ void setup()
 
 	PrintfLogo();
 // EOK,初始化成功，并且RTC时间在运行，不需要设置日期，时间。否则需要设置
-	if (rtc.begin(clock_lsi) != E_OK)
+	if (rtc.begin(clock_lse) != E_OK)
 	{
 		rtc.setDate(date);
 		rtc.setTime(time);

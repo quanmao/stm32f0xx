@@ -22,7 +22,7 @@
 
 #if USE_PRINTF
 // 是否打印调试信息, 1打印,0不打印
-#define debug 0
+#define debug 1
 #endif
 
 #if debug
@@ -107,6 +107,11 @@ E_STATE ebox_Exit_RTC_InitMode(void)
   return (ebox_WaitForSynchro_RTC());
 }
 
+/**
+  * @brief  初始化RTC时钟
+  * @param  ClockS clock 时钟源，clock_lse,clock_lsi
+  * @retval E_TIMEOUT 时钟配置失败,E_OK 时钟配置成功,无需设置时钟，E_NG 时钟配置成功，需要设置时钟
+  */
 int E_RTC::begin(ClockS clock)
 {
 	int ret = E_NG;
@@ -120,7 +125,7 @@ int E_RTC::begin(ClockS clock)
 				{					
 					DEBUG("LSE时钟启动失败,使用LSI时钟\r\n");
 					//LL_RTC_BAK_SetRegister(RTC, LL_RTC_BKP_DR1, 0x00);
-					ret = _config(clock_lsi);;
+					_config(clock_lsi);;
 				}
 		}
 		else	// 时钟保持工作，不需要设置
@@ -129,7 +134,7 @@ int E_RTC::begin(ClockS clock)
 			ret = E_OK;
 		}
 	}else{	// 其他两种时钟源VDD掉电后RTC状态不定，所以需要初始化
-		ret = _config(clock_lsi);
+		_config(clock_lsi);
 	}
 	_nvic();
 	return ret;
