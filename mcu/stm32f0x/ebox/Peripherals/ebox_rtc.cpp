@@ -22,7 +22,7 @@
 
 #if USE_PRINTF
 // 是否打印调试信息, 1打印,0不打印
-#define debug 1
+#define debug 0
 #endif
 
 #if debug
@@ -37,40 +37,49 @@
 /* Define used to indicate date/time updated */
 #define RTC_BKP_DATE_TIME_UPDTATED ((uint32_t)0x32F2)
 
-//Rtc rtc;
+/* ck_apre=LSIFreq/(ASYNC prediv + 1) with LSIFreq=40 kHz RC */
+#define LSI_ASYNCH_PREDIV          ((uint32_t)0x7F)
+/* ck_spre=ck_apre/(SYNC prediv + 1) = 1 Hz */
+#define LSI_SYNCH_PREDIV           ((uint32_t)0x137)
+
+/* ck_apre=LSEFreq/(ASYNC prediv + 1) = 256Hz with LSEFreq=32768Hz */
+#define LSE_ASYNCH_PREDIV          ((uint32_t)0x7F)
+/* ck_spre=ck_apre/(SYNC prediv + 1) = 1 Hz */
+#define LSE_SYNCH_PREDIV           ((uint32_t)0x00FF)
+
+
 fun_noPara_t rtc_callback;//
 
 /**
   * @brief  等待Time&Date寄存器与RTC(APB)时钟同步
   * @param  None
-  * @retval RTC_ERROR_NONE if no error (RTC_ERROR_TIMEOUT will occur if RTC is 
-  *         not synchronized)
+  * @retval E_OK,E_TIMEOUT
   */
-__INLINE uint32_t ebox_WaitForSynchro_RTC(void)
+__INLINE E_STATE ebox_WaitForSynchro_RTC(void)
 {
-	uint64_t end = GetEndTime(5000);
+	uint32_t end = GetEndTime(RTC_TIMEOUT);
 	/* Clear RSF flag */
 	LL_RTC_ClearFlag_RS(RTC);
 	/* Wait the registers to be synchronised */
 	while (LL_RTC_IsActiveFlag_RS(RTC) != 1)
 	{
-		if (IsTimeOut(end,5000))
+		if (IsTimeOut(end,RTC_TIMEOUT))
 		{
 			DEBUG("时钟同步超时\r\n");
-			return 0;
+			return E_TIMEOUT;
 		}
 	}
-	return 0;
+	return E_OK;
 }
 /**
   * @brief  进入赋值模式
   * @note   该模式计数器停止，可以更新RTC值
   * @param  None
-  * @retval RTC_ERROR_NONE if no error
+  * @retval E_OK,E_TIMEOUT
   */
-uint32_t ebox_Enter_RTC_InitMode(void)
+E_STATE ebox_Enter_RTC_InitMode(void)
 {
-	uint64_t end = GetEndTime(RTC_TIMEOUT);
+	uint32_t end = GetEndTime(RTC_TIMEOUT);
 	/* Set Initialization mode */
 	LL_RTC_EnableInitMode(RTC);
 	/* Check if the Initialization mode is set */
@@ -79,10 +88,10 @@ uint32_t ebox_Enter_RTC_InitMode(void)
 		if (IsTimeOut(end,RTC_TIMEOUT))
 		{
 			DEBUG("进入赋值模式超时,如果使用LSE,请断电后重新上电！\r\n");
-			return 0;
+			return E_TIMEOUT;
 		}
 	}
-	return 0;
+	return E_OK;
 }
 
 /**
@@ -90,7 +99,7 @@ uint32_t ebox_Enter_RTC_InitMode(void)
   * @param  None
   * @retval RTC_ERROR_NONE if no error
   */
-uint32_t ebox_Exit_RTC_InitMode(void)
+E_STATE ebox_Exit_RTC_InitMode(void)
 {
   LL_RTC_DisableInitMode(RTC);
   /* Wait for synchro */
@@ -98,25 +107,20 @@ uint32_t ebox_Exit_RTC_InitMode(void)
   return (ebox_WaitForSynchro_RTC());
 }
 
-
-
-
-
-int E_RTC::begin(void)
+int E_RTC::begin(ClockS clock)
 {
 	int ret = E_NG;
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 	LL_PWR_EnableBkUpAccess();
-	if (_clocks)	//LSE
+	if (clock)	//LSE
 	{
 		if ((_getTimeFlag() == 0) )	//时钟掉电，需要重新设置
 		{
 				if (_config(clock_lse) != E_OK)
-				{
-					_config(clock_lsi);
+				{					
 					DEBUG("LSE时钟启动失败,使用LSI时钟\r\n");
 					//LL_RTC_BAK_SetRegister(RTC, LL_RTC_BKP_DR1, 0x00);
-					ret = E_NG;
+					ret = _config(clock_lsi);;
 				}
 		}
 		else	// 时钟保持工作，不需要设置
@@ -125,7 +129,7 @@ int E_RTC::begin(void)
 			ret = E_OK;
 		}
 	}else{	// 其他两种时钟源VDD掉电后RTC状态不定，所以需要初始化
-		_config(clock_lsi);
+		ret = _config(clock_lsi);
 	}
 	_nvic();
 	return ret;
@@ -296,24 +300,21 @@ void E_RTC::setTime(Time_T time)
 */
 void E_RTC::setAlarm(Time_T time,uint32_t mask)
 {
-	/*##-1- Disable RTC registers write protection ############################*/
+	/*##-1- 关闭写保护并进入初始化模式 */
 	LL_RTC_DisableWriteProtection(RTC);
 	ebox_Enter_RTC_InitMode();
-	/* Disable Alarm*/
+	/*##-2- 关闭闹铃 */
 	LL_RTC_ALMA_Disable(RTC);
-	/* Set Alarm to 12:00:25
-	   RTC Alarm Generation: Alarm on Hours, Minutes and Seconds (ignore date/weekday)*/
+  /*##-3- 设置闹铃&屏蔽位 */
 	LL_RTC_ALMA_ConfigTime(RTC, __LL_RTC_CONVERT_BIN2BCD(time.Format12_24), __LL_RTC_CONVERT_BIN2BCD(time.Hours), __LL_RTC_CONVERT_BIN2BCD(time.Minutes), __LL_RTC_CONVERT_BIN2BCD(time.Seconds));
 	LL_RTC_ALMA_SetMask(RTC, mask);
 
-	/* Enable Alarm*/
+	/*##-4- 打开闹铃,清除标志位 */
 	LL_RTC_ALMA_Enable(RTC);
-	/* Clear the Alarm interrupt pending bit */
 	LL_RTC_ClearFlag_ALRA(RTC);
 	/* Enable IT Alarm */
-//	LL_RTC_EnableIT_ALRA(RTC);
+  /*##-5 退出初始化并打开写保护*/
 	ebox_Exit_RTC_InitMode();
-	/*##-8- Enable RTC registers write protection #############################*/
 	LL_RTC_EnableWriteProtection(RTC);
 }
 
@@ -328,23 +329,10 @@ void E_RTC::_nvic(void)
 	NVIC_EnableIRQ(RTC_IRQn);
 }
 
-//void Rtc::attach_sec_interrupt(void (*cb_fun)(void))
-//{
-//    rtc_callback_table[0] = cb_fun;
-//}
 void E_RTC::attach_alarm_interrupt(void (*cb_fun)(void))
 {
     rtc_callback = cb_fun;
 }
-//void Rtc::attach_overflow_interrupt(void (*cb_fun)(void))
-//{
-//    rtc_callback_table[2] = cb_fun;
-//}
-
-//void Rtc::sec_interrupt(FunctionalState state)
-//{
-// 
-//}
 
 void E_RTC::alarmOnOff(FunctionalState state)
 {

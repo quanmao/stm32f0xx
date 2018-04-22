@@ -31,7 +31,8 @@
 #define EXAMPLE_DATE	"2017-07-18"
 #define DEMO_VER			"1.0"
 
-E_RTC rtc(clock_lse);
+// 注意E_RTC没有显示构造函数，默认为无参构造，所以rtc后面不跟括号
+E_RTC rtc;
 //E_RTC rtc(clock_lse);
 // 串口，led
 E_UART usart(USART1,PA_9,PA_10);
@@ -55,7 +56,7 @@ static void PrintfLogo(void)
 	usart.printf("* 例程名称   : %s\r\n", EXAMPLE_NAME);	/* 打印例程名称 */
 	usart.printf("* 例程版本   : %s\r\n", DEMO_VER);			/* 打印例程版本 */
 	usart.printf("* 发布日期   : %s\r\n", EXAMPLE_DATE);	/* 打印例程日期 */
-
+	
 	/* 打印ST固件库版本，这3个定义宏在stm32f0xx.h文件中 */
 	usart.printf("* CMSIS版本  : V%d.%d.%d (STM32 HAL lib)\r\n", __STM32F0_DEVICE_VERSION_MAIN,
 			__STM32F0_DEVICE_VERSION_SUB1,__STM32F0_DEVICE_VERSION_SUB2);
@@ -93,7 +94,7 @@ void setup()
 
 	PrintfLogo();
 // EOK,初始化成功，并且RTC时间在运行，不需要设置日期，时间。否则需要设置
-	if (rtc.begin() != E_OK)
+	if (rtc.begin(clock_lsi) != E_OK)
 	{
 		rtc.setDate(date);
 		rtc.setTime(time);

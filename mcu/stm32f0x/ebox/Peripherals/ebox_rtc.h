@@ -8,6 +8,9 @@
 	2017/7/19
 		1  修复无法启动LSE作为时钟源的bug
 		2  修复无法重复设置闹铃的bug
+  2018/4/22
+    1  修复LSE模式下闹铃无法响应问题
+    2  添加闹铃响应字段定义
   ******************************************************************************
   * @attention
   *
@@ -32,17 +35,6 @@
  *  2 LSI为时钟，VDD掉电后，RTC状态不定
  *  3 HSE/32为时钟，VDD掉电或内部调压器（V1.8）掉电，RTC状态不定
  */
-
-/* ck_apre=LSIFreq/(ASYNC prediv + 1) with LSIFreq=40 kHz RC */
-#define LSI_ASYNCH_PREDIV          ((uint32_t)0x7F)
-/* ck_spre=ck_apre/(SYNC prediv + 1) = 1 Hz */
-#define LSI_SYNCH_PREDIV           ((uint32_t)0x137)
-
-/* ck_apre=LSEFreq/(ASYNC prediv + 1) = 256Hz with LSEFreq=32768Hz */
-#define LSE_ASYNCH_PREDIV          ((uint32_t)0x7F)
-/* ck_spre=ck_apre/(SYNC prediv + 1) = 1 Hz */
-#define LSE_SYNCH_PREDIV           ((uint32_t)0x00FF)
-
 
 typedef struct{
 	uint32_t Format12_24;	//
@@ -81,35 +73,35 @@ typedef enum
 	clock_lse
 }ClockS;
 
+#define eRtc_NoMask                         LL_RTC_ALMA_MASK_NONE          // 不屏蔽,date,hour,minutes,seconds均参与匹配
+#define eRtc_MaskDateWeekDay                LL_RTC_ALMA_MASK_DATEWEEKDAY   // 不匹配年月日
+#define eRtc_MaskHours                      LL_RTC_ALMA_MASK_HOURS         // 不匹配小时
+#define eRtc_MaskMinutes                    LL_RTC_ALMA_MASK_MINUTES       // 不匹配分钟
+#define eRtc_MaskSeconds                    LL_RTC_ALMA_MASK_SECONDS       // 不匹配秒
+#define eRtc_MaskAll                        (RTC_ALRMAR_MSK4 | RTC_ALRMAR_MSK3 | RTC_ALRMAR_MSK2 | RTC_ALRMAR_MSK1) //屏蔽所有位,此时闹铃每秒触发一次
+
 class E_RTC
 {
 public:
-	E_RTC(ClockS clock){_clocks = clock;};  //1:LSE;0:LSI如果使用外部晶振
-	int begin(void);
-	//正常返回EOK
-	//失败后会返回一个ETIMEOUT错误,并自动转为内部晶振。
-
-//	void attach_overflow_interrupt(void (*cb_fun)(void));
-	void attach_alarm_interrupt(void (*cb_fun)(void));
-//	void attach_sec_interrupt(void (*cb_fun)(void));
-
-//	void overflow_interrupt(FunctionalState state);
+//	E_RTC(void);  //1:LSE;0:LSI如果使用外部晶振
+	
+  // 初始化RTC,默认LSE,如果LSE启动失败,会自动转为LSI
+  int begin(ClockS clock = clock_lse);
+  // 设置闹铃，默认不匹配日期
+  void setAlarm(Time_T time,uint32_t mask = eRtc_MaskDateWeekDay);	
+  void attach_alarm_interrupt(void (*cb_fun)(void));
 	void alarmOnOff(FunctionalState state);
-//	void sec_interrupt(FunctionalState state);
-
-
+  
+  // 设置日期，时间
 	void setDate(Date_T date);
 	void setTime(Time_T time);
-	
-	void setAlarm(Time_T time,uint32_t mask = LL_RTC_ALMA_MASK_DATEWEEKDAY);
-	
+	// 读取日期，时间	
 	void getDateTime(date_time_t *datetime);
 	void getTime(Time_T *time);
 	void getDate(Date_T *date);  
 
 
 private:
-	ClockS	_clocks;
 	int    	_config(ClockS clock);
   void    _setFormat(uint32_t formant);
 	uint8_t _getTimeFlag(void);
