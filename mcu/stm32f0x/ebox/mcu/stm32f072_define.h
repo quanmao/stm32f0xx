@@ -39,7 +39,7 @@
 #define	TIM17CH1	TIM17,PA_7
 #define TIM1CH1		TIM1,PA_8
 #define TIM1CH2		TIM1,PA_9
-//#define TIM1CH3		TIM1,PA_10
+#define TIM1CH3		TIM1,PA_10
 
 #define STM32_SRAM_SIZE					16		//内存大小，ebox_mem调用
 
@@ -84,8 +84,8 @@ static const AF_FUN_S TIM_MAP[] ={
 };
 
 // 不同tim irq索引
-#define TIM1IQR	Irq1
-#define TIM3IQR	Irq2
+#define TIM1IQR		Irq1
+#define TIM3IQR		Irq2
 #define TIM14IQR	Irq3
 #define TIM16IQR	Irq4
 #define TIM17IQR	Irq5

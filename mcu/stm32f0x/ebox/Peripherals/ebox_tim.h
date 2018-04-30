@@ -14,6 +14,8 @@
 		1	E_CAPTURE 对象成员绑定，函数绑定
 	*		2017/9/26
 		1	E_PWM TIM1,TIM3,TIM14,TIM16,TIM17验证ok
+  *   2018/4/30
+    1 E_CAPTURE TIM1CH2 验证ok。其他通道有问题
   ******************************************************************************
   * @attention
   *
@@ -59,6 +61,7 @@
 typedef void (*pfun)(TIM_TypeDef *,uint32_t);
 typedef uint32_t (*pGetFun)(TIM_TypeDef *);
 typedef void (*pCCIT)(TIM_TypeDef *);
+
 
 // 中断绑定函数指针
 typedef void (*tim_irq_handler)(uint32_t id);

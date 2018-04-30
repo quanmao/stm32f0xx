@@ -30,7 +30,8 @@
 #define DEMO_VER			"1.0"
 
 // ´®¿Ú£¬led
-E_UART usart(USART1,PA_9,PA_10);
+//E_UART usart(USART1,PA_9,PA_10);
+E_UART usart(USART2,UART2_TX,UART2_RX);
 E_GPIO led(PA_5);
 cpu_t	cpu;
 
@@ -71,7 +72,7 @@ static void PrintfLogo(void)
 }
 
 E_PWM pwm1(TIM3CH1);
-E_CAPTURE cap(TIM1CH1);
+E_CAPTURE cap(TIM1CH2);
 
 void setup()
 {
@@ -86,7 +87,7 @@ int main(void)
 	uint32_t i;
 	setup();
 
-	pwm1.begin(1000,100);
+	pwm1.begin(1000,500);
 	delay_ms(5000);
 	
 	cap.attach(&cap,&E_CAPTURE::simple_event);
@@ -95,14 +96,15 @@ int main(void)
 
 	while (1)
 	{
-		for (i=200;i<=1740;){
+		for (i=800;i<=1740;){
 			if (cap.available()){
-				usart.printf("\r\n capture frq is %.2f Hz \r\n",cap.get_wave_frq());
+				usart.printf("capture frq is                     %.2f Hz \r\n",cap.get_wave_frq());
 				usart.printf("capture period is %.2f us \r\n",cap.get_wave_peroid());
 //				usart.printf("high_duty = %0.2f%%\r\n", cap.get_wave_high_duty());
 //				usart.printf("low duty  = %0.2f%%\r\n\r\n", cap.get_wave_low_duty());
 				i+=1;
 				pwm1.SetFrequency(i);
+				usart.printf("\r\n");
 			}
 			delay_ms(5000);			
 		}

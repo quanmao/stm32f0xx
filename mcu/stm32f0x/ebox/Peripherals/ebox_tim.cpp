@@ -17,9 +17,19 @@
 #include "ebox_core.h"
 #include "stm32f0xx_ll_tim.h"
 #include "stm32f0xx_ll_rcc.h"
+
+#if USE_PRINTF
+// 是否打印调试信息, 1打印,0不打印
+#define debug 1
+#endif
+
+#if debug
 #include "ebox_debug.h"
-
-
+#define  DEBUG(...) DBG("[RTC]  "),DBG(__VA_ARGS__)
+#else
+#define  DEBUG(...)
+#define	 DBG(...)
+#endif
 
 
 #define TIM_IRQ_ID_NUM 5
@@ -42,72 +52,6 @@ __INLINE uint32_t GetClock(void){
 	// 计算TIM时钟频率
 	return LL_RCC_GetAPB1Prescaler() == 0 ? clock.pclk1 : (clock.pclk1*2);
 }
-
-//void E_TIMBase1::calculate(uint32_t frq){
-//	uint32_t timer_clock = GetSourceClock();
-
-//	for (prescaler = 1; prescaler <= 0xffff; prescaler++)
-//	{
-//		// 计数器频率 = 时钟/分频; 计数个数 = 计数器频率/需要的频率
-//		period = timer_clock / (prescaler) / frq;
-//		if ((0xffff >= period) && (period >= 1))
-//		{
-//			prescaler--;
-//			break;
-//		}
-//	}
-//}
-
-//E_TIMBase::E_TIMBase(TIM_TypeDef *TIMx,E_PinID id){
-
-//	_pin = new E_PinBase(id);
-//	_index = getIndex(id,TIM_MAP);
-//	_pin->mode(TIM_MAP[_index]._pin_date,TIM_MAP[_index]._pin_af);
-//	_timx = TIMx;
-//	// 初始化通道信息
-//	switch (TIM_MAP[_index]._periph_base)
-//	{
-//	case TIMxCH1:
-//		_ch = LL_TIM_CHANNEL_CH1;
-//		_OCsetCompare = &LL_TIM_OC_SetCompareCH1;
-//		break;
-//	case TIMxCH2:
-//		_ch = LL_TIM_CHANNEL_CH2;
-//		_OCsetCompare = &LL_TIM_OC_SetCompareCH2;
-//		break;
-//	case TIMxCH3:
-//		_ch = LL_TIM_CHANNEL_CH3;
-//		_OCsetCompare = &LL_TIM_OC_SetCompareCH3;
-//		break;
-//	case TIMxCH4:
-//		_ch = LL_TIM_CHANNEL_CH4;
-//		_OCsetCompare = &LL_TIM_OC_SetCompareCH4;
-//		break;
-//	}
-//}
-
-//void E_TIMBase::init(uint16_t period, uint16_t prescaler){
-//
-//	_index = getPeriphIndex1((uint32_t)_timx,TIM_INFO);
-//	TIM_INFO[_index]._EnableClock(TIM_INFO[_index]._rcc);
-//	// 以下代码来自pwm.cpp
-//	LL_TIM_SetClockSource(_timx,LL_TIM_CLOCKSOURCE_INTERNAL);
-//	LL_TIM_EnableARRPreload(_timx);
-//	/* Reset value is LL_TIM_OCPOLARITY_HIGH */
-//	//LL_TIM_OC_SetPolarity(TIMx, TIM_Channel, oc_polarity);
-//	//LL_TIM_OC_EnablePreload(_timx, _ch);
-//	// PWM end
-//	LL_TIM_SetCounterMode(_timx, LL_TIM_COUNTERMODE_UP);
-//	LL_TIM_SetPrescaler(_timx, prescaler);
-//	LL_TIM_SetAutoReload(_timx, period);
-//}
-
-/**
- *@brief    获取时钟频率
- *@param    NONE
- *@retval   当前TIM频率
-*/
-
 
 /**
  *@brief    基类构造函数
@@ -166,14 +110,12 @@ void E_base::_calculate(uint32_t frq)
 	uint32_t prescaler = 1;		// 预分频
 	uint32_t ii = GetClock();
 
-	DBG("TIM clock : %d , Timer frq : %d \r\n",GetClock(),frq);
-
 	for (; prescaler <= 0xffff; prescaler++)
 	{
 		period = ii / prescaler / frq;
 		if (0xffff >= period)
 		{
-			//DBG("calculate success! period = %d , prescaler = %d  \r\n",period,prescaler);
+			DEBUG("TIM clock : %d , Timer frq : %d period = %d , prescaler = %d  \r\n",ii,frq,period,prescaler);
 			break;
 		}
 	}
@@ -253,7 +195,7 @@ void E_TIME::setMs(uint32_t ms){
 void E_TIME::setFrequency(uint32_t frq){
 	if (frq >= GetClock())//控制频率，保证其有1%精度
 		frq = GetClock();
-	DBG("frq %d , max frq %d \r\n",frq,GetClock());
+	DEBUG("frq %d , max frq %d \r\n",frq,GetClock());
 	_calculate(frq);
 	_enableClock();
 	_setPerPsc();
@@ -374,14 +316,12 @@ void E_PWM::SetDutyCycle(uint16_t duty)
 	// 百分之一精度
 	if(_accuracy){
 		_duty = (_duty<10 && _duty!=0)?10:duty;
+		
 	}
 
 	percent = (_duty/1000.0);
-	//DBG("DutyCycle is : %f \r\n",percent);
-
 	pulse = (uint16_t) (( percent  * _period ));
-	//DBG("pulse is : %d \r\n",pulse);
-
+	DEBUG("DutyCycle is : %.1f%% , pulse is : %d \r\n",percent*100,pulse);
 	_OCsetCompare(_timx, pulse);
 		/* Force update generation 强制更新 */
 	LL_TIM_GenerateEvent_UPDATE(_timx);
@@ -553,7 +493,8 @@ void E_CAPTURE::_setMode(){
   /* TIM1 interrupts set-up */
   /**************************/
   /* Enable the capture/compare interrupt for channel 1 */
-  LL_TIM_EnableIT_CC2(_timx);  
+  //LL_TIM_EnableIT_CC2(_timx);  
+	_CCEnableIT(_timx);
   /***********************/
   /* Start input capture */
   /***********************/
@@ -640,6 +581,7 @@ extern "C" {
 
 	void TIM1_CC_IRQHandler(void)
 	{
+		
 		/* Check whether CC1 interrupt is pending */
 		if (LL_TIM_IsActiveFlag_CC1(TIM1) == 1)
 		{
@@ -656,6 +598,13 @@ extern "C" {
 			irq_handler(tim_irq_ids[TIM1IQR]);
 		}
 		
+		if (LL_TIM_IsActiveFlag_CC3(TIM1) == 1)
+		{
+			/* Clear the update interrupt flag*/
+			LL_TIM_ClearFlag_CC3(TIM1);
+			/* TIM1 capture/compare interrupt processing(function defined in main.c) */
+//			irq_handler(tim_irq_ids[TIM1IQR]);
+		}		
 	}
 #ifdef TIM2
 	void TIM2_IRQHandler(void)
