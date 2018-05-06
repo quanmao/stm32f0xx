@@ -4,8 +4,8 @@
   * @author  cat_li
   * @version V2.0
   * @date    2017/7/17
-  * @brief   ³õÊ¼°æ±¾,»ùÓÚSTM32F0 HAL¿âLL²ã
-	*		2018/4/2	Ìí¼Óµ÷ÊÔĞÅÏ¢
+  * @brief   åˆå§‹ç‰ˆæœ¬,åŸºäºSTM32F0 HALåº“LLå±‚
+	*		2018/4/2	æ·»åŠ è°ƒè¯•ä¿¡æ¯
   ******************************************************************************
   * @attention
   *
@@ -20,7 +20,7 @@
 #ifndef   __EBOX_IFLASH_H__
 #define   __EBOX_IFLASH_H__
 #include "ebox_core.h"
-#include "stm32f0xx_hal_flash_ex.h"
+//#include "stm32f0xx_hal_flash_ex.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,31 +100,31 @@ class E_Flash
 {
 public:
 	/**
-	*@brief    ¹¹Ôìº¯Êı,Éè¶¨µÄflash´óĞ¡ = nPage * FLASH_PAGE_SIZE
-	*@param    uint8_t startAddr  ´ÓµÚ¼¸¸öÉÈÇø¿ªÊ¼
-	   uint8_t nPage		Ò³ÃæÊı > 0
+	*@brief    æ„é€ å‡½æ•°,è®¾å®šçš„flashå¤§å° = nPage * FLASH_PAGE_SIZE
+	*@param    uint8_t startAddr  ä»ç¬¬å‡ ä¸ªæ‰‡åŒºå¼€å§‹
+	   uint8_t nPage		é¡µé¢æ•° > 0
 	*@retval   E_FlashStates
 	*/
 	E_Flash(uint8_t startAddr,uint8_t nPage = 1);
 	/**
-	*@brief    ¶Á³öÒ»×éÊı¾İ
-	*@param    uint32_t offsetAdd  	Òª¶ÁÈ¡µÄµØÖ·
-	   uint8_t *buf			±£´æ¶ÁÈ¡µÄÊı¾İ
-	   uint32_t iNbrToWrite	Òª¶ÁÈ¡µÄÊı¾İ³¤¶È
-	*@retval   ¶Á³öµÄÊı¾İ³¤¶È¡£ Èç¹û 0 ´íÎó
+	*@brief    è¯»å‡ºä¸€ç»„æ•°æ®
+	*@param    uint32_t offsetAdd  	è¦è¯»å–çš„åœ°å€
+	   uint8_t *buf			ä¿å­˜è¯»å–çš„æ•°æ®
+	   uint32_t iNbrToWrite	è¦è¯»å–çš„æ•°æ®é•¿åº¦
+	*@retval   è¯»å‡ºçš„æ•°æ®é•¿åº¦ã€‚ å¦‚æœ 0 é”™è¯¯
 	*/
 	int read(uint32_t offsetAdd, uint8_t *buf, uint32_t iNbrToRead) ;
 	/**
-	*@brief    Ğ´ÈëÒ»×éÊı¾İ
-	*@param    uint32_t offsetAdd  	ÒªĞ´ÈëµÄµØÖ·
-	   uint8_t *buf			ÒªĞ´ÈëµÄÊı¾İ
-	   uint32_t iNbrToWrite	ÒªĞ´ÈëµÄÊı¾İ³¤¶È
-	*@retval   Ğ´ÈëµÄÊı¾İ³¤¶È¡£ Èç¹û 0 ´íÎó
+	*@brief    å†™å…¥ä¸€ç»„æ•°æ®
+	*@param    uint32_t offsetAdd  	è¦å†™å…¥çš„åœ°å€
+	   uint8_t *buf			è¦å†™å…¥çš„æ•°æ®
+	   uint32_t iNbrToWrite	è¦å†™å…¥çš„æ•°æ®é•¿åº¦
+	*@retval   å†™å…¥çš„æ•°æ®é•¿åº¦ã€‚ å¦‚æœ 0 é”™è¯¯
 	*/
 	int write(uint32_t offsetAdd, uint8_t *buf,uint32_t iNbrToWrite);
 private:
-	uint32_t _start_addr;	// ÆğÊ¼µØÖ·
-	uint32_t _end_addr;		// ½áÊøµØÖ·
+	uint32_t _start_addr;	// èµ·å§‹åœ°å€
+	uint32_t _end_addr;		// ç»“æŸåœ°å€
 };
 
 

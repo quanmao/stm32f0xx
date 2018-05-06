@@ -4,8 +4,8 @@
   * @author  cat_li
   * @version V2.0
   * @date    2017/7/16
-  * @brief   STM32F0,»ùÓÚHAL¿âLL²ã
-		½¨ÒéÒÆÈëcore.cppÎÄ¼ş
+  * @brief   STM32F0,åŸºäºHALåº“LLå±‚
+		å»ºè®®ç§»å…¥core.cppæ–‡ä»¶
   ******************************************************************************
   * @attention
   *
@@ -21,7 +21,7 @@
 #ifndef __EBOX_WDG_H_
 #define __EBOX_WDG_H_
 #include "ebox_core.h"
-#include "stm32f0xx_ll_iwdg.h"
+//#include "stm32f0xx_ll_iwdg.h"
 
 
 class E_WDG
@@ -29,13 +29,13 @@ class E_WDG
 public:
 	E_WDG() {};
 	/**
-	*@brief    Æô¶¯¿´ÃÅ¹·,×î³¤ÑÓÊ±26208ms
-	*@param    ms ÑÓÊ±Ê±³¤£¬µ¥Î»ms
+	*@brief    å¯åŠ¨çœ‹é—¨ç‹—,æœ€é•¿å»¶æ—¶26208ms
+	*@param    ms å»¶æ—¶æ—¶é•¿ï¼Œå•ä½ms
 	*@retval   NONE
 	*/
 	void begin(uint16_t ms);
 	/**
-	*@brief    Î¹¹·,µ±¿´ÃÅ¹»È¥×î³¤26208Ê±£¬½¨ÒéÎ¹¹·¼ä¸ô²»Òª³¬¹ı25s
+	*@brief    å–‚ç‹—,å½“çœ‹é—¨å¤Ÿå»æœ€é•¿26208æ—¶ï¼Œå»ºè®®å–‚ç‹—é—´éš”ä¸è¦è¶…è¿‡25s
 	*@param    none
 	*@retval   NONE
 	*/

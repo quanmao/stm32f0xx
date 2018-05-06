@@ -5,7 +5,7 @@
   * @version V2.0
   * @date    2016/10/21
   * @brief
-  *     2017Äê3ÔÂ4ÈÕ  add SystickÖĞ¶Ï»Øµ÷½Ó¿Ú
+  *     2017å¹´3æœˆ4æ—¥  add Systickä¸­æ–­å›è°ƒæ¥å£
   ******************************************************************************
   * @attention
   *
@@ -19,12 +19,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "ebox_core.h"
-#include "stm32f0xx_ll_rcc.h"
-#include "stm32f0xx_ll_utils.h"
-#include "stm32f0xx_ll_cortex.h"
+// ç§»æ¤åˆ°å¯¹åº”èŠ¯ç‰‡å®šä¹‰æ–‡ä»¶
+//#include "stm32f0xx_ll_rcc.h"
+//#include "stm32f0xx_ll_utils.h"
+//#include "stm32f0xx_ll_cortex.h"
 
 #if USE_PRINTF
-// ÊÇ·ñ´òÓ¡µ÷ÊÔĞÅÏ¢, 1´òÓ¡,0²»´òÓ¡
+// æ˜¯å¦æ‰“å°è°ƒè¯•ä¿¡æ¯, 1æ‰“å°,0ä¸æ‰“å°
 #define debug 0
 #endif
 
@@ -40,7 +41,7 @@
 #define systick_no_interrupt()  LL_SYSTICK_DisableIT()
 #define systick_interrupt()     LL_SYSTICK_EnableIT()
 
-// ±ê¼ÇÆÁ±ÎÖĞ¶ÏµÄ´ÎÊı,ÔÚebox_defineÖĞµ÷ÓÃ
+// æ ‡è®°å±è”½ä¸­æ–­çš„æ¬¡æ•°,åœ¨ebox_defineä¸­è°ƒç”¨
 volatile uint8_t irqCount = 0;
 //cpu_t cpu;
 cpu_clock_t clock;
@@ -50,16 +51,16 @@ cpu_clock_t clock;
 extern "C" {
 #endif
 
-  // systick ÖĞ¶Ï»Øµ÷º¯ÊıÖ¸Õë£¬
+  // systick ä¸­æ–­å›è°ƒå‡½æ•°æŒ‡é’ˆï¼Œ
   fun_noPara_t  callBackFun;
   static uint16_t _multiple = 1;
 
   void nullFun(void){}
 
   /**
-   *@brief    ×¢²áÖĞ¶Ï»Øµ÷º¯Êı£¬Ã¿´ÎÖĞ¶Ï¾ùµ÷ÓÃ£¬Ä¬ÈÏÖÜÆÚÎª1ms
-   *@param    SystickCallBack_T fun »Øµ÷º¯Êı£¨ÎŞ²Î£©
-   *@retval   E_OK  ×¢²á³É¹¦£¬ E_NG ×¢²áÊ§°Ü
+   *@brief    æ³¨å†Œä¸­æ–­å›è°ƒå‡½æ•°ï¼Œæ¯æ¬¡ä¸­æ–­å‡è°ƒç”¨ï¼Œé»˜è®¤å‘¨æœŸä¸º1ms
+   *@param    SystickCallBack_T fun å›è°ƒå‡½æ•°ï¼ˆæ— å‚ï¼‰
+   *@retval   E_OK  æ³¨å†ŒæˆåŠŸï¼Œ E_NG æ³¨å†Œå¤±è´¥
   */
   E_STATE SystickCallBackRegister(fun_noPara_t fun){
     if (callBackFun == NULL || callBackFun == nullFun)
@@ -72,9 +73,9 @@ extern "C" {
   }
 
   /**
-   *@brief    ×¢²áÖĞ¶Ï»Øµ÷º¯Êı£¬¿ÉÒÔÖ¸¶¨µ÷ÓÃÖÜÆÚ = ÖĞ¶ÏÖÜÆÚ * multiple
-   *@param    SystickCallBack_T fun »Øµ÷º¯Êı£¨ÎŞ²Î£©, uint8_t multiple ±¶Êı¡£ÓÃÀ´Éè¶¨µ÷ÓÃÖÜÆÚ
-   *@retval   E_OK  ×¢²á³É¹¦£¬ E_NG ×¢²áÊ§°Ü
+   *@brief    æ³¨å†Œä¸­æ–­å›è°ƒå‡½æ•°ï¼Œå¯ä»¥æŒ‡å®šè°ƒç”¨å‘¨æœŸ = ä¸­æ–­å‘¨æœŸ * multiple
+   *@param    SystickCallBack_T fun å›è°ƒå‡½æ•°ï¼ˆæ— å‚ï¼‰, uint8_t multiple å€æ•°ã€‚ç”¨æ¥è®¾å®šè°ƒç”¨å‘¨æœŸ
+   *@retval   E_OK  æ³¨å†ŒæˆåŠŸï¼Œ E_NG æ³¨å†Œå¤±è´¥
   */
   E_STATE SystickCallBackMultipleReg(fun_noPara_t fun,uint16_t multiple){
 
@@ -89,7 +90,7 @@ extern "C" {
   }
 
   /**
-   *@brief    ÅäÖÃÏµÍ³Ê±ÖÓ£¬ÈõÉùÃ÷£¬ÔÊĞíÓÃ»§ÔÚ±ğ´¦ÊµÏÖ£¬ÒÔÓÃÀ´ĞŞ¸ÄÊ±ÖÓ.Ä¬ÈÏ48M @ HSI
+   *@brief    é…ç½®ç³»ç»Ÿæ—¶é’Ÿï¼Œå¼±å£°æ˜ï¼Œå…è®¸ç”¨æˆ·åœ¨åˆ«å¤„å®ç°ï¼Œä»¥ç”¨æ¥ä¿®æ”¹æ—¶é’Ÿ.é»˜è®¤48M @ HSI
    *@param    none
    *@retval   none
   */
@@ -107,46 +108,46 @@ extern "C" {
     LL_PLL_ConfigSystemClock_HSI(&sUTILS_PLLInitStruct, &sUTILS_ClkInitStruct);
   }
     
-  __IO uint32_t millis_seconds;//Ìá¹©Ò»¸ömills()µÈĞ§µÄÈ«¾Ö±äÁ¿¡£½µµÍcpuµ÷ÓÃ¿ªÏú
+  __IO uint32_t millis_seconds;//æä¾›ä¸€ä¸ªmills()ç­‰æ•ˆçš„å…¨å±€å˜é‡ã€‚é™ä½cpuè°ƒç”¨å¼€é”€
   static uint8_t micro_para;
 
   /**
-   *@brief   ebox³õÊ¼»¯£¬ÅäÖÃÊ±ÖÓ£¬ÉèÖÃsystickÖĞ¶ÏÖÜÆÚ£¬²¢³õÊ¼»¯ÖĞ¶Ï
+   *@brief   eboxåˆå§‹åŒ–ï¼Œé…ç½®æ—¶é’Ÿï¼Œè®¾ç½®systickä¸­æ–­å‘¨æœŸï¼Œå¹¶åˆå§‹åŒ–ä¸­æ–­
    *@param    none
    *@retval   none
   */
   void ebox_init(void)
   {
     SystemClock_Config();
-		// ÆÁ±Î¸Ãº¯Êı¿ÉÒÔ¼õÉÙ500×Ö½Úcode¿Õ¼ä
+		// å±è”½è¯¥å‡½æ•°å¯ä»¥å‡å°‘500å­—èŠ‚codeç©ºé—´
     get_system_clock();
 //    get_chip_info();
-    /* ²»¸ÄÊ±ÖÓÔ´µÄÇé¿öÏÂ£¬systickµÄÊ±ÖÓÆµÂÊÎªHCLK, 1msÖĞ¶Ï¼ÆÊıÆ÷ÖµÓ¦ÎªHCLK/1000
-     * Èç¹ûHCLKÎª8M£¬Ôòsystick×îĞ¡¼ÆÊıÊ±¼äÎª1/8us,
+    /* ä¸æ”¹æ—¶é’Ÿæºçš„æƒ…å†µä¸‹ï¼Œsystickçš„æ—¶é’Ÿé¢‘ç‡ä¸ºHCLK, 1msä¸­æ–­è®¡æ•°å™¨å€¼åº”ä¸ºHCLK/1000
+     * å¦‚æœHCLKä¸º8Mï¼Œåˆ™systickæœ€å°è®¡æ•°æ—¶é—´ä¸º1/8us,
      */
-    SysTick_Config(clock.hclk/1000);//  Ã¿¸ô 1ms²úÉúÒ»´ÎÖĞ¶Ï
-    LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);//systemticks clock£»
-    micro_para = (uint8_t)(clock.hclk/1000000);//¼õÉÙmicrosº¯Êı¼ÆËãÁ¿
+    SysTick_Config(clock.hclk/1000);//  æ¯éš” 1msäº§ç”Ÿä¸€æ¬¡ä¸­æ–­
+    LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);//systemticks clockï¼›
+    micro_para = (uint8_t)(clock.hclk/1000000);//å‡å°‘microså‡½æ•°è®¡ç®—é‡
 
     SystickCallBackRegister(nullFun);
   }
 	
  /**
-   *@brief    »ñÈ¡ÏµÍ³ÔËĞĞÊ±¼ä
+   *@brief    è·å–ç³»ç»Ÿè¿è¡Œæ—¶é—´
    *@param    none
    *@retval   us
   */
   uint32_t micros(void)
   {
-    //Èç¹û´ËÊ±ÆÁ±ÎÁËËùÓĞÖĞ¶ÏÇÒ·¢ÉúÁËsystickÒç³ö£¬ĞèÒª¶Ômillis_secend½øĞĞ²¹³¥
+    //å¦‚æœæ­¤æ—¶å±è”½äº†æ‰€æœ‰ä¸­æ–­ä¸”å‘ç”Ÿäº†systickæº¢å‡ºï¼Œéœ€è¦å¯¹millis_secendè¿›è¡Œè¡¥å¿
     if (__get_PRIMASK() && ( SysTick->CTRL & (1 << 16)))
     {
-      millis_seconds++; //ms¼ÆÊı
+      millis_seconds++; //msè®¡æ•°
     }
-    /* millis_seconds * 1000 ½«ms×ª»¯Îªus
-     * cpu.clock.hclk/1000 Systick reloadÖµ£¬SystickÏòÏÂ¼ÆÊı£¬ËùÒÔcpu.clock.hclk/1000 - SysTick->VAL = ¼ÆÊıÖµ
-     * ¼ÆÊıÖµ /(cpu.clock.hclk/1000000) = us
-     * ×îÖÕÎª millis_seconds *1000 + ((cpu.clock.hclk/1000 - SysTick->VAL)/(cpu.clock.hclk/1000000)) =
+    /* millis_seconds * 1000 å°†msè½¬åŒ–ä¸ºus
+     * cpu.clock.hclk/1000 Systick reloadå€¼ï¼ŒSystickå‘ä¸‹è®¡æ•°ï¼Œæ‰€ä»¥cpu.clock.hclk/1000 - SysTick->VAL = è®¡æ•°å€¼
+     * è®¡æ•°å€¼ /(cpu.clock.hclk/1000000) = us
+     * æœ€ç»ˆä¸º millis_seconds *1000 + ((cpu.clock.hclk/1000 - SysTick->VAL)/(cpu.clock.hclk/1000000)) =
      * (millis_seconds * 1000 + (1000 - (SysTick->VAL / cpu.clock.hclk)*1000000))
      */
     //return  (millis_seconds * 1000 + (1000 - (SysTick->VAL / SysTick->LOAD)*1000));
@@ -154,23 +155,23 @@ extern "C" {
   }
   
 	/**
-   *@brief    »ñÈ¡ÏµÍ³ÔËĞĞÊ±¼ä
+   *@brief    è·å–ç³»ç»Ÿè¿è¡Œæ—¶é—´
    *@param    none
    *@retval   ms
   */
   uint32_t millis( void )
   {
-    //Èç¹û´ËÊ±ÆÁ±ÎÁËËùÓĞÖĞ¶ÏÇÒ·¢ÉúÁËsystickÒç³ö£¬ĞèÒª¶Ômillis_secend½øĞĞ²¹³¥
+    //å¦‚æœæ­¤æ—¶å±è”½äº†æ‰€æœ‰ä¸­æ–­ä¸”å‘ç”Ÿäº†systickæº¢å‡ºï¼Œéœ€è¦å¯¹millis_secendè¿›è¡Œè¡¥å¿
     if (__get_PRIMASK() && ( SysTick->CTRL & (1 << 16)) )
     {
-      return millis_seconds++; //ms¼ÆÊı
+      return millis_seconds++; //msè®¡æ•°
     }else{
       return millis_seconds;
     }
   }
 	
  /**
-   *@brief    msÑÓÊ±
+   *@brief    mså»¶æ—¶
    *@param    none
    *@retval   ms
   */
@@ -180,8 +181,8 @@ extern "C" {
     while (!IsTimeOut(end,ms));
   }
   /**
-   *@brief    usÑÓÊ±,Ê¹ÓÃsystick¼ÆÊıÆ÷¡£48MhzÊ±ÖÓÊ±¿ÉÒÔÂú×ãus(1.3)¾«¶È¡£8MhzÊ±×îĞ¡6-7us,24MhzÊ±×îĞ¡2.2us,16MhzÊ±×îĞ¡3.5us
-   *@param    uint16_t us  ÒªÑÓÊ±µÄÊ±³¤£¬×îĞ¡1us
+   *@brief    uså»¶æ—¶,ä½¿ç”¨systickè®¡æ•°å™¨ã€‚48Mhzæ—¶é’Ÿæ—¶å¯ä»¥æ»¡è¶³us(1.3)ç²¾åº¦ã€‚8Mhzæ—¶æœ€å°6-7us,24Mhzæ—¶æœ€å°2.2us,16Mhzæ—¶æœ€å°3.5us
+   *@param    uint16_t us  è¦å»¶æ—¶çš„æ—¶é•¿ï¼Œæœ€å°1us
    *@retval   none
   */
   void  delay_us(uint16_t us)
@@ -189,9 +190,9 @@ extern "C" {
     uint32_t ticks;
     uint32_t told,tnow,tcnt=0;
 
-    ticks = (us-1) *micro_para;             /* ¼ÆÊıÖÜÆÚ */
+    ticks = (us-1) *micro_para;             /* è®¡æ•°å‘¨æœŸ */
     tcnt = 0;
-    told = SysTick->VAL;               /* ±£´æµ±Ç°¼ÆÊıÖµ */
+    told = SysTick->VAL;               /* ä¿å­˜å½“å‰è®¡æ•°å€¼ */
 
     while (1)
     {
@@ -202,7 +203,7 @@ extern "C" {
     }
   }
 
-  void ebox_SysTick_Handler(void)//systickÖĞ¶Ï
+  void ebox_SysTick_Handler(void)//systickä¸­æ–­
   {
     if (millis_seconds++ % _multiple == 0)
     {
@@ -210,9 +211,9 @@ extern "C" {
     }
   }
   /**
-   *@brief    »ñÈ¡ÏµÍ³Ê±ÖÓ
+   *@brief    è·å–ç³»ç»Ÿæ—¶é’Ÿ
    *@param    none
-   *@retval   È«¾Ö±äÁ¿clock
+   *@retval   å…¨å±€å˜é‡clock
   */
   void get_system_clock()
   {
@@ -221,36 +222,36 @@ extern "C" {
   }
 
   /**
-   *@brief    »ñÈ¡ÏµÍ³ĞÅÏ¢£¬CPU_ID,flashsize
-   *@param    *cpu£º  cpuĞÅÏ¢Ö¸Õë£¬·µ»ØcpuĞÅÏ¢
+   *@brief    è·å–ç³»ç»Ÿä¿¡æ¯ï¼ŒCPU_ID,flashsize
+   *@param    *cpuï¼š  cpuä¿¡æ¯æŒ‡é’ˆï¼Œè¿”å›cpuä¿¡æ¯
    *@retval   none
   */
   void get_chip_info(cpu_t *cpu)
   {
-    cpu->chip_id[2] = LL_GetUID_Word0(); //µÍ×Ö½Ú
+    cpu->chip_id[2] = LL_GetUID_Word0(); //ä½å­—èŠ‚
     cpu->chip_id[1] = LL_GetUID_Word1(); //
-    cpu->chip_id[0] = LL_GetUID_Word2(); //¸ß×Ö½Ú
-    cpu->flash_size = LL_GetFlashSize(); //Ğ¾Æ¬flashÈİÁ¿
+    cpu->chip_id[0] = LL_GetUID_Word2(); //é«˜å­—èŠ‚
+    cpu->flash_size = LL_GetFlashSize(); //èŠ¯ç‰‡flashå®¹é‡
   }
 
 #ifdef __cplusplus
 }
 
-
-#include "stm32f0xx_ll_cortex.h"
-#include "stm32f0xx_ll_pwr.h"
+// ç§»æ¤åˆ°å¯¹åº”èŠ¯ç‰‡å®šä¹‰æ–‡ä»¶
+//#include "stm32f0xx_ll_cortex.h"
+//#include "stm32f0xx_ll_pwr.h"
 
 /**
- *@brief    cpuĞİÃß,½öÄÚºËÍ£Ö¹£¬ÍâÉè±£³ÖÔËĞĞ¡£×¢Òâ:sleep_on_exti±»ÖĞ¶Ï»½ĞÑºóÖ´ĞĞÍêÖĞ¶Ï»áÔÙ´Î½øÈësleepÄ£Ê½
- *@param    uint8_t isSleepnow: 0 sleep_on_extiÄ£Ê½, 1 sleep nowÄ£Ê½
-            uint8_t entry: 0 wfi,ÈÎÒâÖĞ¶Ï»½ĞÑ, 1 wfe,ÈÎÒâÊÂ¼ş»½ĞÑ
-            Ä¬ÈÏÎª1 sleep now  0 wfi Ä£Ê½          
+ *@brief    cpuä¼‘çœ ,ä»…å†…æ ¸åœæ­¢ï¼Œå¤–è®¾ä¿æŒè¿è¡Œã€‚æ³¨æ„:sleep_on_extiè¢«ä¸­æ–­å”¤é†’åæ‰§è¡Œå®Œä¸­æ–­ä¼šå†æ¬¡è¿›å…¥sleepæ¨¡å¼
+ *@param    uint8_t isSleepnow: 0 sleep_on_extiæ¨¡å¼, 1 sleep nowæ¨¡å¼
+            uint8_t entry: 0 wfi,ä»»æ„ä¸­æ–­å”¤é†’, 1 wfe,ä»»æ„äº‹ä»¶å”¤é†’
+            é»˜è®¤ä¸º1 sleep now  0 wfi æ¨¡å¼          
  *@retval   none
 */
 void ebox_sleep(uint8_t isSleepnow,uint8_t entry){
   DEBUG("entry sleep mode !");
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-  //ĞèÒª¹Ø±ÕsystickÖĞ¶Ï£¬·ÀÖ¹±»»½ĞÑ
+  //éœ€è¦å…³é—­systickä¸­æ–­ï¼Œé˜²æ­¢è¢«å”¤é†’
   LL_SYSTICK_DisableIT();
   /* Set STOP_LPREGU mode when CPU enters deepsleep */
   LL_PWR_SetPowerMode(LL_PWR_MODE_STOP_MAINREGU);
@@ -276,22 +277,22 @@ void ebox_sleep(uint8_t isSleepnow,uint8_t entry){
     DBG(" || wfi mode");
     __WFI();
   }
-  // »½ĞÑºó»Ö¸´sysTickÖĞ¶Ï
+  // å”¤é†’åæ¢å¤sysTickä¸­æ–­
   LL_SYSTICK_EnableIT();
 	LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_PWR);
   DBG(" || wake up from sleep mode !\r\n");
 }
 
 /**
- *@brief    1.8v¹©µçÇøÓòËùÓĞÊ±ÖÓÍ£Ö¹,SRAMºÍ¼Ä´æÆ÷ÄÚÈİ±£Áô,ËùÓĞIO±£³ÖÔÚÔËĞĞÄ£Ê½×´Ì¬
- *@param    uint8_t isSleepnow: 0 sleep_on_extiÄ£Ê½, 1 sleep nowÄ£Ê½
-            uint8_t entry: 0 wfi,ÈÎÒâÍâ²¿ÖĞ¶Ï»½ĞÑ, 1 wfe,ÈÎÒâÍâ²¿ÊÂ¼ş»½ĞÑ
-            Ä¬ÈÏÎª1 sleep now  0 wfi Ä£Ê½            
+ *@brief    1.8vä¾›ç”µåŒºåŸŸæ‰€æœ‰æ—¶é’Ÿåœæ­¢,SRAMå’Œå¯„å­˜å™¨å†…å®¹ä¿ç•™,æ‰€æœ‰IOä¿æŒåœ¨è¿è¡Œæ¨¡å¼çŠ¶æ€
+ *@param    uint8_t isSleepnow: 0 sleep_on_extiæ¨¡å¼, 1 sleep nowæ¨¡å¼
+            uint8_t entry: 0 wfi,ä»»æ„å¤–éƒ¨ä¸­æ–­å”¤é†’, 1 wfe,ä»»æ„å¤–éƒ¨äº‹ä»¶å”¤é†’
+            é»˜è®¤ä¸º1 sleep now  0 wfi æ¨¡å¼            
  *@retval   none
 */
 void ebox_stop(uint8_t isSleepnow,uint8_t entry){
   DEBUG("entry stop mode !");
-	// ĞèÒª¿ªÆôPWRÊ±ÖÓ£¬²ÅÄÜ¹»Ğ´PWR¼Ä´æÆ÷
+	// éœ€è¦å¼€å¯PWRæ—¶é’Ÿï¼Œæ‰èƒ½å¤Ÿå†™PWRå¯„å­˜å™¨
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
   /* Set STOP_LPREGU mode when CPU enters deepsleep */
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP_LPREGU);
@@ -324,8 +325,8 @@ void ebox_stop(uint8_t isSleepnow,uint8_t entry){
 }
 
 /**
- *@brief    Ö»ÓĞ±¸·İ¼Ä´æÆ÷ºÍ´ı»úµçÂ·¹¤×÷£¬ÍË³öºóÏàµ±ÓëÖØÆô
- *@param    uint32_t wakeUpPin: LL_PWR_WAKEUP_PIN1,LL_PWR_WAKEUP_PIN2 ²Î¿¼stm32f0xx_ll_pwr.h¶¨Òå                     
+ *@brief    åªæœ‰å¤‡ä»½å¯„å­˜å™¨å’Œå¾…æœºç”µè·¯å·¥ä½œï¼Œé€€å‡ºåç›¸å½“ä¸é‡å¯
+ *@param    uint32_t wakeUpPin: LL_PWR_WAKEUP_PIN1,LL_PWR_WAKEUP_PIN2 å‚è€ƒstm32f0xx_ll_pwr.hå®šä¹‰                     
  *@retval   none
 */
 void ebox_standby(uint32_t wakeUpPin){

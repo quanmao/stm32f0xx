@@ -4,14 +4,14 @@
   * @author  cat_li
   * @brief   
 	*		2017/7/31	 LQM
-			1	µ¥Í¨µÀADC×ª»»Ä£Ê½
+			1	å•é€šé“ADCè½¬æ¢æ¨¡å¼
 	*		2017/8/2		 LQM
-			1	µ¥Í¨µÀÁ¬Ğø²ÉÑù
-			2	¶àÍ¨µÀµ¥´Î²ÉÑù,Á¬Ğø²ÉÑù
+			1	å•é€šé“è¿ç»­é‡‡æ ·
+			2	å¤šé€šé“å•æ¬¡é‡‡æ ·,è¿ç»­é‡‡æ ·
 			2017/8/28
-			1	¶àÍ¨µÀÄ£Ê½£¬Í¨¹ıÖ¸¶¨²ÉÑùÉî¶È£¬¾ö¶¨Á¬Ğø²ÉÑùºÍÖ¸¶¨´ÎÊı²ÉÑù
-	* ÒÑÖªbug
-			1 ÄÚ²¿²Î¿¼µçÑ¹µÚÒ»´Î¶ÁÈ¡ÕıÈ·£¬Ö®ºóÃ¿´Î¶ÁÈ¡ĞèÒª¼ä¸ô800ms£¬²ÅÄÜ±£Ö¤²Î¿¼µçÑ¹ÕıÈ·
+			1	å¤šé€šé“æ¨¡å¼ï¼Œé€šè¿‡æŒ‡å®šé‡‡æ ·æ·±åº¦ï¼Œå†³å®šè¿ç»­é‡‡æ ·å’ŒæŒ‡å®šæ¬¡æ•°é‡‡æ ·
+	* å·²çŸ¥bug
+			1 å†…éƒ¨å‚è€ƒç”µå‹ç¬¬ä¸€æ¬¡è¯»å–æ­£ç¡®ï¼Œä¹‹åæ¯æ¬¡è¯»å–éœ€è¦é—´éš”800msï¼Œæ‰èƒ½ä¿è¯å‚è€ƒç”µå‹æ­£ç¡®
   ******************************************************************************
   * @attention
   *
@@ -28,11 +28,11 @@
 
 #include "target_mcu.h"
 #include "ebox_config.h"
-#include "stm32f0xx_ll_adc.h"
-#include "stm32f0xx_ll_dma.h"
+//#include "stm32f0xx_ll_adc.h"
+//#include "stm32f0xx_ll_dma.h"
 
 #ifdef	USE_TIMEOUT
-	#define TIMEOUT		1000	// Ä¬ÈÏ³¬Ê±Ê±¼äÎª1000us
+	#define TIMEOUT		1000	// é»˜è®¤è¶…æ—¶æ—¶é—´ä¸º1000us
 #endif
 
 
@@ -64,7 +64,7 @@ public:
 	uint16_t getVoltage();
 	float 	 getTemperature();
 private:
-	uint32_t _channel;		// adcÍ¨µÀ	
+	uint32_t _channel;		// adcé€šé“	
 	void _setInterChannel(void);
 };
 
@@ -81,7 +81,7 @@ public:
 	void dmaStart();
 	void update();
 
-	uint16_t *r_buffer;		// ×ª»»½á¹û
+	uint16_t *r_buffer;		// è½¬æ¢ç»“æœ
 private:
 	uint32_t _channel;
 	uint8_t  _deep;

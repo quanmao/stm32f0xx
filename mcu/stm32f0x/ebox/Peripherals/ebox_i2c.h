@@ -25,7 +25,7 @@
 
 #include "target_mcu.h"
 #include "ebox_config.h"
-#include "stm32f0xx_ll_i2c.h"
+//#include "stm32f0xx_ll_i2c.h"
 
 #ifdef	USE_TIMEOUT
 	#define TIMEOUT		1000	// 默认超时时间为1000us

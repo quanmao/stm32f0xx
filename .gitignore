@@ -12,3 +12,7 @@
 /Project/stm32f0x/TKStudio/*.xmp
 
 /Project/stm32f0x/mdk/stm32f0x.uvguix.quli
+*.dbgconf
+/Project/stm32f1x/mdk/*.scvd
+/Project/stm32f1x/mdk/Listings
+Objects

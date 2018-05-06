@@ -4,7 +4,7 @@
   * @author  cat_li
   * @version V2.0
   * @date    2016/10/21
-  * @brief   ebox���òü��ļ�
+  * @brief   ebox配置裁剪文件
   ******************************************************************************
   * @attention
   *
@@ -21,36 +21,36 @@
 #ifndef __EBOX_CONFIG_H
 #define __EBOX_CONFIG_H
 
-//�Ƿ�ʹ��printf����,�ù���ռ�ô洢�ռ�϶࣬Ŀǰȷ�ϵ�ʹ�øù��ܵİ���uart��1602
+//是否使用printf功能,该功能占用存储空间较多，目前确认的使用该功能的包括uart和1602
 #define USE_PRINTF	1
 
 #if USE_PRINTF
-//�Ƿ�ʹ��DEBUG,��Ҫ��ebox_debug.h�ļ��ж�������豸 1 ʹ��  0 ��ʹ��
+//是否使用DEBUG,需要在ebox_debug.h文件中定义输出设备 1 使用  0 不使用
 #define EBOX_DEBUG  1
 #endif
 
-/*ѡ���ڴ�����ļ�, 1 ʹ��ebxo_mem�ڴ������ 0 microlib�ڴ����
- * ebox_mem������δʹ���ڴ���Ϊ�ڴ��������,������ռ��flash��microlib��Լ500byte
- * microlib�ɹ������ڴ�������.s�����ļ���heap_size����
+/*选择内存管理文件, 1 使用ebxo_mem内存管理。 0 microlib内存管理
+ * ebox_mem将所有未使用内存作为内存分配区域,更灵活，但占用flash比microlib大约500byte
+ * microlib可管理的内存区域由.s启动文件中heap_size决定
  */
 #define USE_EBOX_MEM  1
 
 
-/*�ڴ���С����̬�����ڴ�ʱ����,��С���׵��¶�β��ܷ���ɹ��������˷��ڴ档�����
- *���������ļ� starup_stm32fxxxx.s �е� Heap_Size
- *printfģ���е���
+/*内存块大小，动态分配内存时增量,过小容易导致多次才能分配成功，过大浪费内存。最大不能
+ *超过启动文件 starup_stm32fxxxx.s 中的 Heap_Size
+ *printf模块中调用
  */
 #define	BUF_BLOCK				64	//64
 
-/* flashд��������ʱ���Ƿ�������ǵ�ǰ�������������; 
- * 0 д�������ݣ���������ǰ��������λ�þ����ݡ� ��Ҫռ��FLASH_PAGE_SIZE��С���ڴ���Ϊ������
- * 1 ֻ������д������ݡ� ��ʡ�ڴ�
+/* flash写入新数据时，是否擦除覆盖当前区块的其它数据; 
+ * 0 写入新数据，并保留当前区块其他位置旧数据。 需要占用FLASH_PAGE_SIZE大小的内存作为缓冲区
+ * 1 只保留新写入的数据。 节省内存
  */
 #define FLASH_OVERRIDE	1
 
-//�Ƿ�ʹ�ó�ʱ,1 ʹ��  0 ��ʹ��
+//是否使用超时,1 使用  0 不使用
 #define USE_TIMEOUT			1
-//�Ƿ�ʹ���ڲ��ο���ѹ 1 ʹ��, 0 ��ʹ��
+//是否使用内部参考电压 1 使用, 0 不使用
 #define USE_INTERVREF		0
 
 

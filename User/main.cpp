@@ -1,10 +1,10 @@
  /**
   ******************************************************************************
   * @file    main.cpp
-  * @author  shentq
+  * @author  cat_Li
   * @version V1.2
-  * @date    2017/07/07
-  * @brief   uartÀý³Ì£¬°üº¬ÖÐ¶Ï°ó¶¨ .
+  * @date    2018/05/06
+  * @brief   ä¸»ç¨‹åºå…¥å£
   ******************************************************************************
   * @attention
   *
@@ -18,51 +18,17 @@
 
 #include "ebox.h"
 
-
-E_GPIO PA5(PA_5);
-E_UART usart(USART1,UART1_TX,UART1_RX);
-
-E_GPIO STEP_PIN(PB_8);
-E_GPIO DIR_PIN(PB_9);
-
-
-
 void setup()
 {
 	ebox_init();
-	PA5.mode(OUTPUT_PP);
-	usart.begin(115200);
-	
-	STEP_PIN.mode(OUTPUT_PP);
-	DIR_PIN.mode(OUTPUT_PP);
-	usart.printf("0x%x \r\n",get_resetType());
 }
 
-
-
-#define DELAY 25
-uint8_t i =250;
-E_WDG dog;
-#define GETEND(a) 	(a+i)
-#define ISOUT(end,delay)  ((uint8_t)(end-i)>delay)
 int main(void)
 {
-//		uint8_t i = 250;
-		uint8_t j = DELAY + i;
-
     setup();
-//		dog.begin(26208);
-		DIR_PIN.reset();
     while(1)
     {
-				delay_ms(10000);
-				usart.printf("×¼±¸¸´Î»");
-				ebox_rst();
-				for(;1;i++){
-//						usart.printf( "i = %d j = %d cha = %d  bool = %d bool = %d  \r\n",i,j,(uint8_t)(j-i),j>=i,ISOUT(j,DELAY));
-//						delay_ms(5000);
-				}
-    }
+		}
 }
 
 

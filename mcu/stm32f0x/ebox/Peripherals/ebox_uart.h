@@ -5,14 +5,14 @@
   * @version V2.0
   * @date    2016/10/21
   * @brief
-	1  2017/5/25  ÒÆ³ıE_PinBaseµÄ¹¹Ôìº¯Êı£¬Ê¹ÓÃPIN_ID
-	2  2017/5/30	ÍêÉÆuart½Ó¿Ú
-	3	 2017/7/12	Ìí¼ÓprintfÊä³ö
-		ÒÑÖªÎÊÌâ£¬Ã»ÓĞ½øĞĞÃ¦¼ì²â
-	4	 2017/9/17  ÒÆ³ı±¾Ä£¿éÄÚprintfÊµÏÖ£¬¸ÄÎª¼Ì³ĞµÄ·½Ê½
-	5	 2018/1/07	ĞŞ¸´½ÓÊÕÊı¾İÊ±·¢ËÍÊı¾İµ¼ÖÂËøËÀ
-	6	 2018/2/07	½ûÖ¹´®¿ÚÒç³ö¼ì²â¹¦ÄÜ£¬·ÀÖ¹³ÌĞò¿¨ËÀ¡£
-								Ìí¼Óº¬³¬Ê±¼ì²âµÄread½Ó¿Ú
+	1  2017/5/25  ç§»é™¤E_PinBaseçš„æ„é€ å‡½æ•°ï¼Œä½¿ç”¨PIN_ID
+	2  2017/5/30	å®Œå–„uartæ¥å£
+	3	 2017/7/12	æ·»åŠ printfè¾“å‡º
+		å·²çŸ¥é—®é¢˜ï¼Œæ²¡æœ‰è¿›è¡Œå¿™æ£€æµ‹
+	4	 2017/9/17  ç§»é™¤æœ¬æ¨¡å—å†…printfå®ç°ï¼Œæ”¹ä¸ºç»§æ‰¿çš„æ–¹å¼
+	5	 2018/1/07	ä¿®å¤æ¥æ”¶æ•°æ®æ—¶å‘é€æ•°æ®å¯¼è‡´é”æ­»
+	6	 2018/2/07	ç¦æ­¢ä¸²å£æº¢å‡ºæ£€æµ‹åŠŸèƒ½ï¼Œé˜²æ­¢ç¨‹åºå¡æ­»ã€‚
+								æ·»åŠ å«è¶…æ—¶æ£€æµ‹çš„readæ¥å£
   ******************************************************************************
   * @attention
   *
@@ -27,7 +27,7 @@
 #ifndef __EBOX_UART_H_
 #define __EBOX_UART_H_
 
-#include "stm32f0xx_ll_usart.h"
+//#include "stm32f0xx_ll_usart.h"		ç§»åŠ¨åˆ°èŠ¯ç‰‡å®šä¹‰æ–‡ä»¶
 #include "ebox_define.h"
 #include "ebox_gpio.h"
 #include "ebox_Template.h"
@@ -35,10 +35,10 @@
 
 #define UART_NUM (2)
 
-// ÖĞ¶ÏÀàĞÍ
+// ä¸­æ–­ç±»å‹
 enum IrqType {
-	RxIrq = 0,	// ½ÓÊÕÍê³Éºó´¥·¢
-	TxIrq		// ·¢ËÍÍê³Éºó´¥·¢
+	RxIrq = 0,	// æ¥æ”¶å®Œæˆåè§¦å‘
+	TxIrq		// å‘é€å®Œæˆåè§¦å‘
 };
 
 typedef void (*uart_irq_handler)(uint32_t id, IrqType type);
@@ -76,18 +76,18 @@ public:
 	void   wait_busy();
 	void   set_busy();
 	/**
-	 *@brief    °ó¶¨¾²Ì¬»Øµ÷º¯Êı attach user event
-	 *@param    IrqType type ÖĞ¶ÏÀàĞÍ£¬RxIrq(½ÓÊÕµ½Êı¾İ),TxIrq£¨Êı¾İ·¢ËÍÍê³É£©;
-	 *@param    void (*fptr)(void) »Øµ÷º¯ÊıÖ¸Õë
+	 *@brief    ç»‘å®šé™æ€å›è°ƒå‡½æ•° attach user event
+	 *@param    IrqType type ä¸­æ–­ç±»å‹ï¼ŒRxIrq(æ¥æ”¶åˆ°æ•°æ®),TxIrqï¼ˆæ•°æ®å‘é€å®Œæˆï¼‰;
+	 *@param    void (*fptr)(void) å›è°ƒå‡½æ•°æŒ‡é’ˆ
 	 *@retval   NONE
 	*/
 	void attach(void (*fptr)(void), IrqType type);
 
 	/**
-	 *@brief    °ó¶¨³ÉÔ±»Øµ÷º¯Êı
-	 *@param    IrqType type ÖĞ¶ÏÀàĞÍ£¬RxIrq(½ÓÊÕµ½Êı¾İ),TxIrq£¨Êı¾İ·¢ËÍÍê³É£©;
-	 *@param    void (T::*mptr)(void) Àà³ÉÔ±º¯ÊıÖ¸Õë
-	 *@param    T* tptr ÀàµÄÊµÀı¶ÔÏó
+	 *@brief    ç»‘å®šæˆå‘˜å›è°ƒå‡½æ•°
+	 *@param    IrqType type ä¸­æ–­ç±»å‹ï¼ŒRxIrq(æ¥æ”¶åˆ°æ•°æ®),TxIrqï¼ˆæ•°æ®å‘é€å®Œæˆï¼‰;
+	 *@param    void (T::*mptr)(void) ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ
+	 *@param    T* tptr ç±»çš„å®ä¾‹å¯¹è±¡
 	 *@retval   NONE
 	*/
 	template<typename T>

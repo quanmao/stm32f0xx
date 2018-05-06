@@ -1,10 +1,10 @@
 /******************************************************************************
-³Ì Ğò Ãû£º target_mcu.h¡¡
-±à Ğ´ ÈË£º cat_li
-±àĞ´Ê±¼ä£º 2017Äê9ÔÂ11ÈÕ
-Ïà¹ØÆ½Ì¨£º STM32F0xx, ebox
-ĞŞ¸ÄÈÕÖ¾£º¡¡¡¡
-	NO.1-  ³õÊ¼°æ±¾
+ç¨‹ åº åï¼š target_mcu.hã€€
+ç¼– å†™ äººï¼š cat_li
+ç¼–å†™æ—¶é—´ï¼š 2018å¹´05æœˆ06æ—¥
+ç›¸å…³å¹³å°ï¼š STM32F1xx, ebox
+ä¿®æ”¹æ—¥å¿—ï¼šã€€ã€€
+	NO.1-  åˆå§‹ç‰ˆæœ¬
 ******************************************************************************/
 
 #ifndef __MCU_SELECT_H_
@@ -16,13 +16,13 @@
  extern "C" {
 #endif /* __cplusplus */
 
-#if 	defined(STM32F030x6)
+#if 	defined(STM32F103xB)
 	#include "stm32f030_define.h"
-#elif defined(STM32F072xB)
+#elif defined(STM32F103xE)
 	#include "stm32f072_define.h"	
 #else
 	#error 	 "Please select first the target STM32F0xx device used in your application (in stm32f0xx.h file)"
-	#define STM32_SRAM_SIZE					16		//ÄÚ´æ´óĞ¡£¬ebox_memµ÷ÓÃ
+	#define STM32_SRAM_SIZE					16		//å†…å­˜å¤§å°ï¼Œebox_memè°ƒç”¨
 #endif
 	 
 #ifdef __cplusplus

@@ -4,13 +4,13 @@
   * @author  cat_li
   * @brief   STM32F0 @ HAL lib
 			todo list
-			1	ÖĞ¶Ï°ó¶¨
+			1	ä¸­æ–­ç»‘å®š
 	2017/7/19
-		1  ĞŞ¸´ÎŞ·¨Æô¶¯LSE×÷ÎªÊ±ÖÓÔ´µÄbug
-		2  ĞŞ¸´ÎŞ·¨ÖØ¸´ÉèÖÃÄÖÁåµÄbug
+		1  ä¿®å¤æ— æ³•å¯åŠ¨LSEä½œä¸ºæ—¶é’Ÿæºçš„bug
+		2  ä¿®å¤æ— æ³•é‡å¤è®¾ç½®é—¹é“ƒçš„bug
   2018/4/22
-    1  ĞŞ¸´LSEÄ£Ê½ÏÂÄÖÁåÎŞ·¨ÏìÓ¦ÎÊÌâ
-    2  Ìí¼ÓÄÖÁåÏìÓ¦×Ö¶Î¶¨Òå
+    1  ä¿®å¤LSEæ¨¡å¼ä¸‹é—¹é“ƒæ— æ³•å“åº”é—®é¢˜
+    2  æ·»åŠ é—¹é“ƒå“åº”å­—æ®µå®šä¹‰
   ******************************************************************************
   * @attention
   *
@@ -25,15 +25,15 @@
 #ifndef __EBOX_RTC_H_
 #define __EBOX_RTC_H_
 #include "ebox_core.h"
-#include "stm32f0xx_ll_rtc.h"
+//#include "stm32f0xx_ll_rtc.h"
 
 
 /**
- * ËµÃ÷:
+ * è¯´æ˜:
  * -LQM (2016/9/12)
- *  1 LSEÎªÊ±ÖÓ£¬µ±VbatÎ¬³Ö£¬VDDµôµç£¬RTCÈÔÈ»¼ÌĞø¹¤×÷
- *  2 LSIÎªÊ±ÖÓ£¬VDDµôµçºó£¬RTC×´Ì¬²»¶¨
- *  3 HSE/32ÎªÊ±ÖÓ£¬VDDµôµç»òÄÚ²¿µ÷Ñ¹Æ÷£¨V1.8£©µôµç£¬RTC×´Ì¬²»¶¨
+ *  1 LSEä¸ºæ—¶é’Ÿï¼Œå½“Vbatç»´æŒï¼ŒVDDæ‰ç”µï¼ŒRTCä»ç„¶ç»§ç»­å·¥ä½œ
+ *  2 LSIä¸ºæ—¶é’Ÿï¼ŒVDDæ‰ç”µåï¼ŒRTCçŠ¶æ€ä¸å®š
+ *  3 HSE/32ä¸ºæ—¶é’Ÿï¼ŒVDDæ‰ç”µæˆ–å†…éƒ¨è°ƒå‹å™¨ï¼ˆV1.8ï¼‰æ‰ç”µï¼ŒRTCçŠ¶æ€ä¸å®š
  */
 
 typedef struct{
@@ -73,44 +73,44 @@ typedef enum
 	clock_lse
 }ClockS;
 
-#define eRtc_NoMask                         LL_RTC_ALMA_MASK_NONE          // ²»ÆÁ±Î,date,hour,minutes,seconds¾ù²ÎÓëÆ¥Åä
-#define eRtc_MaskDateWeekDay                LL_RTC_ALMA_MASK_DATEWEEKDAY   // ²»Æ¥ÅäÄêÔÂÈÕ
-#define eRtc_MaskHours                      LL_RTC_ALMA_MASK_HOURS         // ²»Æ¥ÅäĞ¡Ê±
-#define eRtc_MaskMinutes                    LL_RTC_ALMA_MASK_MINUTES       // ²»Æ¥Åä·ÖÖÓ
-#define eRtc_MaskSeconds                    LL_RTC_ALMA_MASK_SECONDS       // ²»Æ¥ÅäÃë
-#define eRtc_MaskAll                        (RTC_ALRMAR_MSK4 | RTC_ALRMAR_MSK3 | RTC_ALRMAR_MSK2 | RTC_ALRMAR_MSK1) //ÆÁ±ÎËùÓĞÎ»,´ËÊ±ÄÖÁåÃ¿Ãë´¥·¢Ò»´Î
+#define eRtc_NoMask                         LL_RTC_ALMA_MASK_NONE          // ä¸å±è”½,date,hour,minutes,secondså‡å‚ä¸åŒ¹é…
+#define eRtc_MaskDateWeekDay                LL_RTC_ALMA_MASK_DATEWEEKDAY   // ä¸åŒ¹é…å¹´æœˆæ—¥
+#define eRtc_MaskHours                      LL_RTC_ALMA_MASK_HOURS         // ä¸åŒ¹é…å°æ—¶
+#define eRtc_MaskMinutes                    LL_RTC_ALMA_MASK_MINUTES       // ä¸åŒ¹é…åˆ†é’Ÿ
+#define eRtc_MaskSeconds                    LL_RTC_ALMA_MASK_SECONDS       // ä¸åŒ¹é…ç§’
+#define eRtc_MaskAll                        (RTC_ALRMAR_MSK4 | RTC_ALRMAR_MSK3 | RTC_ALRMAR_MSK2 | RTC_ALRMAR_MSK1) //å±è”½æ‰€æœ‰ä½,æ­¤æ—¶é—¹é“ƒæ¯ç§’è§¦å‘ä¸€æ¬¡
 
 class E_RTC
 {
 public:
-//	E_RTC(void);  //1:LSE;0:LSIÈç¹ûÊ¹ÓÃÍâ²¿¾§Õñ
-	
-	/**
-		* @brief  ³õÊ¼»¯RTC,Ä¬ÈÏLSE,Èç¹ûLSEÆô¶¯Ê§°Ü,»á×Ô¶¯×ªÎªLSI
-		* @param  ClockS clock Ê±ÖÓÔ´£¬clock_lse,clock_lsi
-		* @retval E_TIMEOUT Ê±ÖÓÅäÖÃÊ§°Ü,E_OK Ê±ÖÓÅäÖÃ³É¹¦,ÎŞĞèÉèÖÃÊ±ÖÓ£¬E_NG Ê±ÖÓÅäÖÃ³É¹¦£¬ĞèÒªÉèÖÃÊ±ÖÓ
-		*/
-  int begin(ClockS clock = clock_lse);
-  // ÉèÖÃÄÖÁå£¬Ä¬ÈÏ²»Æ¥ÅäÈÕÆÚ
-  void setAlarm(Time_T time,uint32_t mask = eRtc_MaskDateWeekDay);	
-  void attach_alarm_interrupt(void (*cb_fun)(void));
-	void alarmOnOff(FunctionalState state);
-  
-  // ÉèÖÃÈÕÆÚ£¬Ê±¼ä
-	void setDate(Date_T date);
-	void setTime(Time_T time);
-	// ¶ÁÈ¡ÈÕÆÚ£¬Ê±¼ä	
-	void getDateTime(date_time_t *datetime);
-	void getTime(Time_T *time);
-	void getDate(Date_T *date);  
+////	E_RTC(void);  //1:LSE;0:LSIå¦‚æœä½¿ç”¨å¤–éƒ¨æ™¶æŒ¯
+//	
+//	/**
+//		* @brief  åˆå§‹åŒ–RTC,é»˜è®¤LSE,å¦‚æœLSEå¯åŠ¨å¤±è´¥,ä¼šè‡ªåŠ¨è½¬ä¸ºLSI
+//		* @param  ClockS clock æ—¶é’Ÿæºï¼Œclock_lse,clock_lsi
+//		* @retval E_TIMEOUT æ—¶é’Ÿé…ç½®å¤±è´¥,E_OK æ—¶é’Ÿé…ç½®æˆåŠŸ,æ— éœ€è®¾ç½®æ—¶é’Ÿï¼ŒE_NG æ—¶é’Ÿé…ç½®æˆåŠŸï¼Œéœ€è¦è®¾ç½®æ—¶é’Ÿ
+//		*/
+//  int begin(ClockS clock = clock_lse);
+//  // è®¾ç½®é—¹é“ƒï¼Œé»˜è®¤ä¸åŒ¹é…æ—¥æœŸ
+//  void setAlarm(Time_T time,uint32_t mask = eRtc_MaskDateWeekDay);	
+//  void attach_alarm_interrupt(void (*cb_fun)(void));
+//	void alarmOnOff(FunctionalState state);
+//  
+//  // è®¾ç½®æ—¥æœŸï¼Œæ—¶é—´
+//	void setDate(Date_T date);
+//	void setTime(Time_T time);
+//	// è¯»å–æ—¥æœŸï¼Œæ—¶é—´	
+//	void getDateTime(date_time_t *datetime);
+//	void getTime(Time_T *time);
+//	void getDate(Date_T *date);  
 
 
-private:
-	int    	_config(ClockS clock);
-  void    _setFormat(uint32_t formant);
-	uint8_t _getTimeFlag(void);
-	void    _setTimeFlag(void);
-	void    _nvic(void);
+//private:
+//	int    	_config(ClockS clock);
+//  void    _setFormat(uint32_t formant);
+//	uint8_t _getTimeFlag(void);
+//	void    _setTimeFlag(void);
+//	void    _nvic(void);
 };
 
 #endif

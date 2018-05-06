@@ -39,8 +39,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "ebox_core.h"
-#include "stm32f0xx_ll_tim.h"
-#include "stm32f0xx_ll_adc.h"
+
+#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_adc.h"
 
 /** @addtogroup STM32F0xx_HAL_Examples
   * @{
@@ -75,14 +76,14 @@ void DMA1_Channel1_IRQHandler(void){
 void ADC1_COMP_IRQHandler(void)
 {
 	
-	  /* Check whether ADC group regular overrun caused the ADC interruption */
-  if(LL_ADC_IsActiveFlag_OVR(ADC1) != 0)
-  {
-    /* Clear flag ADC group regular overrun */
-    LL_ADC_ClearFlag_OVR(ADC1);
-    
-    /* Call interruption treatment function */
-  }
+//	  /* Check whether ADC group regular overrun caused the ADC interruption */
+//  if(LL_ADC_IsActiveFlag_OVR(ADC1) != 0)
+//  {
+//    /* Clear flag ADC group regular overrun */
+//    LL_ADC_ClearFlag_OVR(ADC1);
+//    
+//    /* Call interruption treatment function */
+//  }
 
 }
 //#include "ebox_gpio.h"
@@ -104,10 +105,10 @@ void ADC1_COMP_IRQHandler(void)
 
 //}
 #if !defined(STM32F030x6)
-void TIM6_DAC_IRQHandler(void)
-{
-	LL_TIM_ClearFlag_UPDATE(TIM6);
-}
+//void TIM6_DAC_IRQHandler(void)
+//{
+//	LL_TIM_ClearFlag_UPDATE(TIM6);
+//}
 #endif
 
 //void TIM2_IRQHandler(void)

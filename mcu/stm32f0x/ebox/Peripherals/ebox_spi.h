@@ -4,10 +4,10 @@
   * @author  cat_li
   * @version V2.0
   * @date    2016/11/11
-  * @brief   ½ö¹¤×÷ÔÚÖ÷Ä£Ê½
-		1  2017/5/30  ÒÆ³ıE_PinBaseµÄ¹¹Ôìº¯Êı£¬Ê¹ÓÃPIN_ID
-									Ôö¼Ó³¬Ê±£¬·ÀÖ¹³ÌĞòËÀµô¡£
-									¶ÁĞ´º¯ÊıÔö¼Ó·µ»Ø×´Ì¬
+  * @brief   ä»…å·¥ä½œåœ¨ä¸»æ¨¡å¼
+		1  2017/5/30  ç§»é™¤E_PinBaseçš„æ„é€ å‡½æ•°ï¼Œä½¿ç”¨PIN_ID
+									å¢åŠ è¶…æ—¶ï¼Œé˜²æ­¢ç¨‹åºæ­»æ‰ã€‚
+									è¯»å†™å‡½æ•°å¢åŠ è¿”å›çŠ¶æ€
   ******************************************************************************
   * @attention
   *
@@ -24,13 +24,13 @@
 
 #include "target_mcu.h"
 #include "ebox_define.h"
-#include "stm32f0xx_ll_spi.h"
+//#include "stm32f0xx_ll_spi.h"
 
-//spiÏà¹Ø¹«¹²ºêºÍÉùÃ÷//////////////////////////////////
-#define SPI_MODE0 0x02		//±ßÑØ1£¬µÍ
-#define SPI_MODE1 0x00		//±ßÑØ2£¬µÍ
-#define SPI_MODE2 0x03		//±ßÑØ1£¬¸ß
-#define SPI_MODE3 0x01		//±ßÑØ2²ÉÑù£¬Ê±ÖÓ¿ÕÏĞ¸ß
+//spiç›¸å…³å…¬å…±å®å’Œå£°æ˜//////////////////////////////////
+#define SPI_MODE0 0x02		//è¾¹æ²¿1ï¼Œä½
+#define SPI_MODE1 0x00		//è¾¹æ²¿2ï¼Œä½
+#define SPI_MODE2 0x03		//è¾¹æ²¿1ï¼Œé«˜
+#define SPI_MODE3 0x01		//è¾¹æ²¿2é‡‡æ ·ï¼Œæ—¶é’Ÿç©ºé—²é«˜
 
 #define SPI_CLOCK_DIV2     LL_SPI_BAUDRATEPRESCALER_DIV2
 #define SPI_CLOCK_DIV4     LL_SPI_BAUDRATEPRESCALER_DIV4
